@@ -4,12 +4,17 @@
  */
 
 .navi-pill {
-  background: @navi-pale-violet;
-  border: 1px solid @navi-gray;
-  border-radius: 3px;
-  color: @navi-white;
+  font-family: @font-family-strong;
+  background: @navi-blue-200;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  box-sizing: border-box;
+  color: @navi-black;
   display: inline-block;
   font-size: @font-size-mid-base;
   margin: 2px 3px 0 3px;
   padding: 0 4px;
+  &:hover {
+    background-color: @navi-blue-250;
+  }
 }
