@@ -12,5 +12,5 @@ import layout from '../templates/components/dashboard-filters-expanded';
 
 export default Component.extend({
   layout,
-  classNames: ['dashboard-filters', 'dashboard-filters-expanded']
+  classNames: ['dashboard-filters-expanded']
 });

@@ -8,5 +8,5 @@ import layout from '../templates/components/dashboard-filters-collapsed';
 
 export default Component.extend({
   layout,
-  classNames: ['dashboard-filters', 'dashboard-filters-collapsed']
+  classNames: ['dashboard-filters-collapsed']
 });

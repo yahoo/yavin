@@ -1,7 +1,9 @@
 /**
- * Copyright 2017, Yahoo Holdings Inc.
+ * Copyright 2019, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
+
+@shadow-gray: rgba(0, 0, 0, 0.3);
 
 .navi-dashboard {
   &__breadcrumb {
@@ -20,8 +22,21 @@
   &__body {
     .display-flex;
     .flex-1;
+
+    /* ===== <Scroll Shadow> ===== */
+    background: linear-gradient(white 70%, hsla(0, 0%, 100%, 0)),
+      linear-gradient(hsla(0, 0%, 100%, 0), white 70%) bottom, radial-gradient(at top, @shadow-gray, transparent 80%),
+      radial-gradient(at bottom, @shadow-gray, transparent 80%) bottom;
+    background-size: 100% 30px, 100% 30px, 100% 10px, 100% 10px;
+    background-position: 0 0, 0 100%, 0 0, 0 100%;
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
+    /* ===== </Scroll Shadow> ===== */
+
     flex-flow: column;
     overflow-y: auto;
+    padding: 20px 0;
+    width: 100%;
   }
 
   &__fav-icon {
@@ -30,6 +45,15 @@
 
   &__widgets {
     padding: 20px 0;
+    position: static;
+    text-align: center;
+    width: 100%;
+
+    //Prevent background color of table widget from covering the scroll shadow
+    div.table-header-row,
+    .table-widget {
+      background: none;
+    }
   }
 
   .page-header {
