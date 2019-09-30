@@ -1,7 +1,8 @@
 /**
- * Copyright 2017, Yahoo Holdings Inc.
+ * Copyright 2019, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
+
 export default {
   second: 'HH:mm:ss',
   minute: 'HH:mm:00',

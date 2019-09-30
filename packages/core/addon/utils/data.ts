@@ -6,6 +6,12 @@ import { get } from '@ember/object';
 import DataGroup from 'navi-core/utils/classes/data-group';
 import maxBy from 'lodash/maxBy';
 
+interface Row {
+  dateTime: string;
+  [key: string]: string | number;
+}
+type Rows = Array<Row>;
+
 /**
  * Trim rows to a max of n values, sorted by
  * highest value for given metric.
@@ -16,8 +22,9 @@ import maxBy from 'lodash/maxBy';
  * @param {Number} n - max number of rows
  * @returns {Array} - n (or less) rows sorted by metric
  */
-export function topN(rows, metric, n) {
-  let sortedRows = rows.sort((a, b) => Number(get(b, metric)) - Number(get(a, metric)));
+export function topN(rows: Rows, metric: string, n: number): Array<object> {
+  // @ts-ignore
+  let sortedRows = rows.sort((a: object, b: object) => Number(get(b, metric)) - Number(get(a, metric)));
 
   return sortedRows.slice(0, n);
 }
@@ -30,8 +37,8 @@ export function topN(rows, metric, n) {
  * @param {Array} rows - rows to parse by dateTime
  * @returns {Array} all data rows containing the most recent dateTime
  */
-export function mostRecentData(rows) {
-  let byDate = new DataGroup(rows, row => row.dateTime),
+export function mostRecentData(rows: Rows): Rows {
+  let byDate = new DataGroup(rows, (row: Row) => row.dateTime),
     sortedDates = byDate.getKeys().sort(),
     mostRecentDate = sortedDates[sortedDates.length - 1];
 
@@ -46,8 +53,8 @@ export function mostRecentData(rows) {
  * @param {Array} dimensionOrder
  * @returns {DataGroup}
  */
-export function dataByDimensions(rows, dimensionOrder) {
-  return new DataGroup(rows, row => dimensionOrder.map(dimension => row[`${dimension}|id`]).join('|'));
+export function dataByDimensions(rows: Rows, dimensionOrder: Array<string>) {
+  return new DataGroup(rows, (row: Row) => dimensionOrder.map(dimension => row[`${dimension}|id`]).join('|'));
 }
 
 /**
@@ -59,7 +66,7 @@ export function dataByDimensions(rows, dimensionOrder) {
  * @param {String} metric - name of metric used for sorting
  * @returns {Array} all data rows for max value based on dimensions
  */
-export function maxDataByDimensions(rows, dimensionOrder, metric) {
+export function maxDataByDimensions(rows: Rows, dimensionOrder: Array<string>, metric: string): Rows {
   let data = dataByDimensions(rows, dimensionOrder),
     keys = data.getKeys();
 

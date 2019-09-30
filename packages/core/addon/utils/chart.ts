@@ -8,8 +8,7 @@
  * @param {String} transform - transform to calculate
  * @returns {Object} - Object with x and y properties
  */
-
-export function getTranslation(transform) {
+export function getTranslation(transform: string): { x: number; y: number } {
   /*
    * Create a dummy g for calculation purposes only. This will never
    * be appended to the DOM and will be discarded once this function

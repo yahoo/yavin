@@ -1,5 +1,5 @@
 /**
- * Copyright 2018, Yahoo Holdings Inc.
+ * Copyright 2019, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
 
@@ -7,6 +7,8 @@ import { get } from '@ember/object';
 import { w as words } from '@ember/string';
 import { A as arr } from '@ember/array';
 import { getPaginatedRecords } from 'navi-core/utils/pagination';
+
+type PrioritizedRecord = { relevance: number; record: any };
 
 /**
  * Computes how closely two strings match, ignoring word order.
@@ -19,7 +21,7 @@ import { getPaginatedRecords } from 'navi-core/utils/pagination';
  *           Number representing how close query matches string
  *           undefined if no match
  */
-export function getPartialMatchWeight(string, query) {
+export function getPartialMatchWeight(string: string, query: string): number | undefined {
   // Split search query into individual words
   let searchTokens = words(query.trim()),
     origString = string,
@@ -57,7 +59,7 @@ export function getPartialMatchWeight(string, query) {
  *           Number representing how close query matches string
  *           undefined if no match
  */
-export function getExactMatchWeight(string, query) {
+export function getExactMatchWeight(string: string, query: string): number | undefined {
   if (string.indexOf(query) !== -1) {
     // Compute match weight
     return string.length - query.length + 1;
@@ -76,13 +78,13 @@ export function getExactMatchWeight(string, query) {
  * @param {String} searchField - field in record to compare
  * @returns {Array} array of matching records
  */
-export function searchRecords(records, query, searchField) {
+export function searchRecords(records: Array<any>, query: string, searchField: string): Array<PrioritizedRecord> {
   let results = arr();
   records = arr(records);
   query = query.toLowerCase();
 
   for (let i = 0; i < records.length; i++) {
-    let record = records.objectAt(i),
+    let record = records[i],
       relevance = getPartialMatchWeight(get(record, searchField).toLowerCase(), query);
 
     if (relevance) {
@@ -100,18 +102,23 @@ export function searchRecords(records, query, searchField) {
  * @param {Array} records - collection of records to search
  * @param {String} query - search query used to filter and rank assets
  * @param {Number} resultLimit - maximum number of results
- * @param {Number} [page] - page number starting from page 1
+ * @param {Number} page - page number starting from page 1
  * @returns {Array} array of objects in the following form:
  *          record - asset record
  *          relevance - distance between record and search query
  */
-export function searchDimensionRecords(records, query, resultLimit, page) {
-  let results = arr([]);
+export function searchDimensionRecords(
+  records: Array<any>,
+  query: string,
+  resultLimit: number,
+  page: number
+): Array<PrioritizedRecord> {
+  let results = arr<PrioritizedRecord>([]);
   records = arr(records);
 
   // Filter, map, and sort records based on how close each record is to the search query
   for (let i = 0; i < get(records, 'length'); i++) {
-    let record = records.objectAt(i);
+    let record = records[i];
 
     // Determine relevance based on string match weight
     let descriptionMatchWeight = getPartialMatchWeight(get(record, 'description').toLowerCase(), query.toLowerCase()),
@@ -125,10 +132,7 @@ export function searchDimensionRecords(records, query, resultLimit, page) {
 
     if (relevance) {
       // If record matched search query, include it in the filtered results in the desire form
-      results.push({
-        relevance: relevance,
-        record: record
-      });
+      results.push({ relevance, record });
     }
   }
 
