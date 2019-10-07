@@ -6,12 +6,15 @@
 import { inject as service } from '@ember/service';
 import { A as arr } from '@ember/array';
 import { computed, get } from '@ember/object';
-import DS from 'ember-data';
+import { belongsTo } from 'ember-data/relationships';
 import { fragment } from 'ember-data-model-fragments/attributes';
 import DeliverableItem from 'navi-core/models/deliverable-item';
 import { v1 } from 'ember-uuid';
 import hasVisualization from 'navi-core/mixins/models/has-visualization';
 import { validator, buildValidations } from 'ember-cp-validations';
+import attr from 'ember-data/attr';
+import { default as UserModel } from 'navi-core/models/user';
+import { default as UserService } from 'navi-core/services/user';
 
 const Validations = buildValidations({
   visualization: [validator('belongs-to')],
@@ -25,47 +28,49 @@ const Validations = buildValidations({
   ]
 });
 
-export default DeliverableItem.extend(hasVisualization, Validations, {
+export default class Report extends DeliverableItem.extend(hasVisualization, Validations) {
   /* == Attributes == */
-  title: DS.attr('string', { defaultValue: 'Untitled Report' }),
-  createdOn: DS.attr('moment'),
-  updatedOn: DS.attr('moment'),
-  author: DS.belongsTo('user', { async: true }),
-  request: fragment('bard-request/request', { defaultValue: {} }),
+  @attr('string', { defaultValue: 'Untitled Report' }) title!: string;
+  @attr('moment') createdOn: any;
+  @attr('moment') updatedOn: any;
+
+  @belongsTo('user', { async: true }) author!: UserModel;
+
+  request = fragment('bard-request/request', { defaultValue: {} });
 
   /**
    * @property {String} tempId - uuid for unsaved records
    */
-  tempId: computed('id', function() {
+  tempId = computed('id', function() {
     if (get(this, 'id')) {
       return null;
     } else {
       return v1();
     }
-  }),
+  });
 
   /**
    * @property {Service} user
    */
-  user: service(),
+  @service('user') user!: UserService;
 
   /**
    * @property {Boolean} isOwner - is owner of report
    */
-  isOwner: computed(function() {
+  isOwner = computed(function() {
     let user = get(this, 'user').getUser();
     return get(this, 'author.id') === get(user, 'id');
-  }),
+  });
 
   /**
    * @property {Boolean} isFavorite - is favorite of author
    */
-  isFavorite: computed(function() {
+  isFavorite = computed(function() {
     let user = get(this, 'user').getUser(),
       favoriteReports = user.hasMany('favoriteReports').ids();
 
     return arr(favoriteReports).includes(get(this, 'id'));
-  }).volatile(),
+  }).volatile();
 
   /**
    * Clones the model
@@ -73,7 +78,7 @@ export default DeliverableItem.extend(hasVisualization, Validations, {
    * @method clone
    * @returns Object - cloned Report model
    */
-  clone() {
+  clone(this: any) {
     let clonedReport = this.toJSON();
 
     return {
@@ -82,4 +87,10 @@ export default DeliverableItem.extend(hasVisualization, Validations, {
       request: get(this, 'request').clone()
     };
   }
-});
+}
+
+declare module 'ember-data/types/registries/model' {
+  export default interface ModelRegistry {
+    report: Report;
+  }
+}
