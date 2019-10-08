@@ -5,25 +5,22 @@
 
 import Model from 'ember-data/model';
 import { hasMany } from 'ember-data/relationships';
-import Report from 'navi-core/models/report';
-import DeliveryRule from 'navi-core/models/delivery-rule';
-import Dashboard from 'navi-core/models/dashboard';
 
 export default class User extends Model {
   @hasMany('report', { async: true, inverse: 'author' })
-  reports!: Promise<Report[]>;
+  reports: any;
 
   @hasMany('report', { async: true, inverse: null })
-  favoriteReports!: Promise<Report[]>;
+  favoriteReports: any;
 
   @hasMany('deliveryRule', { async: true, inverse: 'owner' })
-  deliveryRules!: Promise<DeliveryRule[]>;
+  deliveryRules: any;
 
   @hasMany('dashboard', { async: true, inverse: 'author' })
-  dashboards!: Dashboard[];
+  dashboards: any;
 
   @hasMany('dashboard', { async: true, inverse: null })
-  favoriteDashboards!: Dashboard[];
+  favoriteDashboards: any;
 }
 
 declare module 'ember-data/types/registries/model' {

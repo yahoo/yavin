@@ -16,7 +16,7 @@ import { copy } from 'ember-copy';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { default as UserModel } from 'navi-core/models/user';
 import * as moment from 'moment';
-import DashboardWidget from 'navi-core/models/dashboard-widget';
+import DashboardWidget, { hasValidations } from 'navi-core/models/dashboard-widget';
 import { default as UserService } from 'navi-core/services/user';
 
 const Validations = buildValidations({
@@ -29,7 +29,8 @@ const Validations = buildValidations({
   ]
 });
 
-export default class Dashboard extends DeliverableItem.extend(Validations) {
+@hasValidations(Validations)
+export default class Dashboard extends DeliverableItem {
   @belongsTo('user', { async: true }) author!: UserModel;
   @attr('string') title!: string;
   @attr('moment') createdOn!: moment.Moment;
@@ -62,17 +63,18 @@ export default class Dashboard extends DeliverableItem.extend(Validations) {
   /**
    * @property {Boolean} canUserEdit - user has edit permissions for dashboard
    */
-  @or('isUserOwner', 'isUserEditor') canUserEdit!: boolean;
+  @or('isUserOwner', 'isUserEditor')
+  canUserEdit!: boolean;
 
   /**
    * @property {Boolean} isFavorite - is favorite of author
    */
-  isFavorite = computed(function(): boolean {
+  get isFavorite() {
     let user = get(this, 'user').getUser(),
       favoriteDashboards = user.hasMany('favoriteDashboards').ids();
 
     return A(favoriteDashboards).includes(get(this, 'id'));
-  }).volatile();
+  }
 
   /**
    * Clones the model

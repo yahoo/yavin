@@ -26,11 +26,50 @@ const Validations = buildValidations({
   ]
 });
 
-export default class DashboardWidget extends Model.extend(hasVisualization, Validations) {
-  @belongsTo('dashboard') dashboard!: Dashboard;
-  @attr('string', { defaultValue: 'Untitled Widget' }) title!: string;
-  @attr('moment') createdOn!: moment.Moment;
-  @attr('moment') updatedOn!: moment.Moment;
+/**
+ * Decorator that allows you to mixin validations when using es6 style model classes
+ *
+ * Usage:
+ *
+ * import { hasValidations } from 'ember-cp-validations';
+ *
+ * @hasValidations(Validations)
+ * export default class YourModel extends Model {
+ *    @attr('string') name
+ * };
+ *
+ *
+ * @param validations
+ * @returns {decorator}
+ */
+
+export function hasValidations(validations: any) {
+  return (desc: any) => {
+    return {
+      ...desc,
+      finisher(klass: any) {
+        klass.prototype.reopen(validations);
+
+        return klass;
+      }
+    };
+  };
+}
+
+@hasValidations(Validations)
+export default class DashboardWidget extends Model.extend(hasVisualization) {
+  @belongsTo('dashboard')
+  dashboard!: Dashboard;
+
+  @attr('string', { defaultValue: 'Untitled Widget' })
+  title!: string;
+
+  @attr('moment')
+  createdOn!: moment.Moment;
+
+  @attr('moment')
+  updatedOn!: moment.Moment;
+
   requests = fragmentArray('bard-request/request', {
     defaultValue: () => []
   });
@@ -39,27 +78,29 @@ export default class DashboardWidget extends Model.extend(hasVisualization, Vali
    * Author retrieved from dashboard
    * @property author
    */
-  author = computed('dashboard', function(): string {
-    return get(this, 'dashboard.author');
-  });
+  @computed('dashboard')
+  get author() {
+    return this.dashboard.author;
+  }
 
   /**
    * @property {MF.Fragment} request - first request object
    */
-  request = computed('requests', function() {
-    return get(this, 'requests.firstObject');
-  });
+  @computed('requests')
+  get request() {
+    return get(get(this, 'requests'), 'firstObject');
+  }
 
   /**
    * @property {String} tempId - uuid for unsaved records
    */
-  tempId = computed('id', function(): string | null {
+  @computed('id')
+  get tempId() {
     if (get(this, 'id')) {
       return null;
-    } else {
-      return v1();
     }
-  });
+    return v1();
+  }
 
   /**
    * Clones the model

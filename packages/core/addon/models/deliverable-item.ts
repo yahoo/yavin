@@ -8,12 +8,13 @@ import { computed, get } from '@ember/object';
 import Model from 'ember-data/model';
 import { hasMany } from 'ember-data/relationships';
 import DeliveryRule from 'navi-core/models/delivery-rule';
+import User from 'navi-core/services/user';
 
 export default class DeliverableItem extends Model {
-  @hasMany('deliveryRule', {
-    async: true,
-    inverse: 'deliveredItem'
-  })
+  user!: User;
+  tempId!: string;
+
+  @hasMany('deliveryRule', { async: true, inverse: 'deliveredItem' })
   deliveryRules!: Promise<DeliveryRule[]>;
 
   /**
@@ -29,10 +30,13 @@ export default class DeliverableItem extends Model {
    */
   @computed('user', 'deliveryRules.[]')
   get deliveryRuleForUser() {
-    let userId = get(get(this, 'user').getUser(), 'id');
+    const user = this.user.getUser();
+    if (!user) {
+      return [];
+    }
 
     return get(this, 'deliveryRules').then((rules: DeliveryRule[]) =>
-      arr(rules.filter(rule => rule.get('owner.id') === userId)).get('firstObject')
+      arr(rules.filter(rule => rule.get('owner.id') === user.id)).get('firstObject')
     );
   }
 }

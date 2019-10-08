@@ -14,7 +14,7 @@ export default class User extends Service {
   /**
    * @property {Ember.Service} store
    */
-  @service store!: StoreService;
+  @service('store') store!: StoreService;
 
   /**
    * Gets user model given user ID without triggering a fetch, if  user ID not specified gets logged-in user
