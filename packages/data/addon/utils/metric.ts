@@ -12,7 +12,7 @@ import { get } from '@ember/object';
  * @param {String} metric.metric - metric name
  * @param {Object} metric.parameters - a key: value object of parameters
  */
-export function canonicalizeMetric(metric) {
+export function canonicalizeMetric(metric: NaviRequestMetric) {
   return hasParameters(metric) ? `${metric.metric}(${serializeParameters(metric.parameters)})` : metric.metric;
 }
 
@@ -23,7 +23,7 @@ export function canonicalizeMetric(metric) {
  * @param {String} attributes.name - metric name
  * @param {Object} attributes.parameters - a key: value object of parameters
  */
-export function canonicalizeColumnAttributes(attributes) {
+export function canonicalizeColumnAttributes(attributes: any) {
   return canonicalizeMetric(mapColumnAttributes(attributes));
 }
 
@@ -37,7 +37,7 @@ export function canonicalizeColumnAttributes(attributes) {
  * @param {Object} obj.parameters (optional) - a key: value object of parameters
  * @returns {Boolean} true if metric has parameters
  */
-export function hasParameters(obj = {}) {
+export function hasParameters(obj: any = {}) {
   let parameters = get(obj, 'parameters');
   return !isEmpty(parameters) && Object.keys(parameters).length > 0;
 }
@@ -61,7 +61,7 @@ export function serializeParameters(obj = {}) {
  * @param metrics {Array} - list of metric objects from a request
  * @returns {object} - list of canonicalized metric names keyed by alias
  */
-export function getAliasedMetrics(metrics = []) {
+export function getAliasedMetrics(metrics: Array<NaviRequestMetric> = []) {
   return metrics.reduce((obj, metric) => {
     if (hasParameters(metric) && 'as' in metric.parameters) {
       return Object.assign({}, obj, {
@@ -80,7 +80,7 @@ export function getAliasedMetrics(metrics = []) {
  * @param aliasMap {object} - key value of alias -> canonicalizedName
  * @returns {string} - canonicalised metric, or alias if not found
  */
-export function canonicalizeAlias(alias, aliasMap = {}) {
+export function canonicalizeAlias(alias: string, aliasMap: any = {}) {
   return aliasMap[alias] || alias;
 }
 
@@ -90,7 +90,7 @@ export function canonicalizeAlias(alias, aliasMap = {}) {
  * @param {String} canonicalName - the metric's canonical name
  * @returns {Object} - object with base metric and parameters
  */
-export function parseMetricName(canonicalName) {
+export function parseMetricName(canonicalName: string) {
   if (typeof canonicalName !== 'string') {
     return canonicalName;
   }
@@ -105,7 +105,7 @@ export function parseMetricName(canonicalName) {
      * `baseName(parameter string)` => extracts `parameter string`
      */
     let paramRegex = /\((.*)\)$/,
-      results = paramRegex.exec(canonicalName),
+      results = paramRegex.exec(canonicalName) || [],
       paramStr = results.length >= 2 ? results[1] : ''; // checks if capture group exists, and uses it if it does
 
     if (!paramStr.includes('=')) {
@@ -142,7 +142,7 @@ export function parseMetricName(canonicalName) {
  * @param {Object} attributes.parameters - metric parameters
  * @returns {Object} - object with metric name and parameters
  */
-export function mapColumnAttributes(attributes) {
+export function mapColumnAttributes(attributes: any) {
   let metric = get(attributes, 'name'),
     parameters = get(attributes, 'parameters') || {};
 

@@ -24,7 +24,7 @@ const TestRequest = {
     {
       metric: 'm1',
       operator: 'gt',
-      value: 0 // TODO switch to `values: [0]` after `value` backwards compatibility has been removed
+      values: [0]
     }
   ],
   intervals: [
@@ -93,7 +93,7 @@ module('Unit | Service | Bard Facts', function(hooks) {
 
     assert.deepEqual(
       Service.getURL(TestRequest),
-      `${HOST}/v1/data/table1/grain1/d1/d2/?` +
+      `${HOST}/v1/data/table1/grain1/d1/d2?` +
         'dateTime=2015-01-03%2F2015-01-04&metrics=m1%2Cm2&' +
         'filters=d3%7Cid-in%5Bv1%2Cv2%5D%2Cd4%7Cid-in%5Bv3%2Cv4%5D&having=m1-gt%5B0%5D&' +
         'format=json',
@@ -102,7 +102,7 @@ module('Unit | Service | Bard Facts', function(hooks) {
 
     assert.deepEqual(
       Service.getURL(TestRequest, { format: 'jsonApi' }),
-      `${HOST}/v1/data/table1/grain1/d1/d2/?` +
+      `${HOST}/v1/data/table1/grain1/d1/d2?` +
         'dateTime=2015-01-03%2F2015-01-04&metrics=m1%2Cm2&' +
         'filters=d3%7Cid-in%5Bv1%2Cv2%5D%2Cd4%7Cid-in%5Bv3%2Cv4%5D&having=m1-gt%5B0%5D&' +
         'format=jsonApi',
@@ -208,7 +208,7 @@ module('Unit | Service | Bard Facts', function(hooks) {
 
   test('fetchNext', function(assert) {
     assert.expect(2);
-    
+
     const originalFetch = Service.fetch;
     Service.fetch = (request, options) => {
       assert.equal(options.page, 3, 'FetchNext calls fetch with updated options');
@@ -225,19 +225,18 @@ module('Unit | Service | Bard Facts', function(hooks) {
       }
     };
     const request = {};
-    
+
     Service.fetchNext(response, request);
 
     response.meta.pagination.currentPage = 3;
     assert.equal(Service.fetchNext(response, request), null, 'fetchNext returns null when the last page is reached');
-    
 
     Service.fetch = originalFetch;
   });
 
   test('fetchPrevious', function(assert) {
     assert.expect(2);
-    
+
     const originalFetch = Service.fetch;
     Service.fetch = (request, options) => {
       assert.equal(options.page, 1, 'FetchPrevious calls fetch with updated options');
@@ -254,12 +253,16 @@ module('Unit | Service | Bard Facts', function(hooks) {
       }
     };
     const request = {};
-    
+
     Service.fetchPrevious(response, request);
 
     response.meta.pagination.currentPage = 1;
-    assert.equal(Service.fetchPrevious(response, request), null, 'fetchPrevious returns null when the first page is reached');
-    
+    assert.equal(
+      Service.fetchPrevious(response, request),
+      null,
+      'fetchPrevious returns null when the first page is reached'
+    );
+
     Service.fetch = originalFetch;
   });
 });

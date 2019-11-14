@@ -90,7 +90,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     };
     assert.equal(
       Adapter._buildDimensionsPath(singleDim),
-      '/d1',
+      'd1',
       '_buildDimensionsPath built the correct string for a single dimension'
     );
 
@@ -99,7 +99,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     };
     assert.equal(
       Adapter._buildDimensionsPath(manyDims),
-      '/d1/d2',
+      'd1/d2',
       '_buildDimensionsPath built the correct string for many dimensions'
     );
 
@@ -401,13 +401,13 @@ module('Unit | Bard facts Adapter', function(hooks) {
 
     assert.equal(
       Adapter._buildURLPath(TestRequest),
-      `${HOST}/v1/data/table1/grain1/d1/d2/`,
+      `${HOST}/v1/data/table1/grain1/d1/d2`,
       '_buildURLPath correctly built the URL path for the provided request when a host is not configured'
     );
 
     assert.equal(
       Adapter._buildURLPath(TestRequest),
-      `${HOST}/v1/data/table1/grain1/d1/d2/`,
+      `${HOST}/v1/data/table1/grain1/d1/d2`,
       '_buildURLPath correctly built the URL path for the provided request when a host is configured'
     );
   });
@@ -600,7 +600,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     assert.equal(
       decodeURIComponent(Adapter.urlForFindQuery(TestRequest)),
       HOST +
-        '/v1/data/table1/grain1/d1/d2/?dateTime=2015-01-03/2015-01-04&' +
+        '/v1/data/table1/grain1/d1/d2?dateTime=2015-01-03/2015-01-04&' +
         'metrics=m1,m2,r(p=123)&filters=d3|id-in[v1,v2],d4|id-in[v3,v4],d5|id-notin[""]&having=m1-gt[0]&' +
         'format=json',
       'urlForFindQuery correctly built the URL for the provided request'
@@ -609,7 +609,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     assert.equal(
       decodeURIComponent(Adapter.urlForFindQuery(TestRequest, { format: 'csv' })),
       HOST +
-        '/v1/data/table1/grain1/d1/d2/?dateTime=2015-01-03/2015-01-04&' +
+        '/v1/data/table1/grain1/d1/d2?dateTime=2015-01-03/2015-01-04&' +
         'metrics=m1,m2,r(p=123)&filters=d3|id-in[v1,v2],d4|id-in[v3,v4],d5|id-notin[""]&having=m1-gt[0]&' +
         'format=csv',
       'urlForFindQuery correctly built the URL for the provided request with the format option'
@@ -621,7 +621,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     });
     assert.equal(
       decodeURIComponent(Adapter.urlForFindQuery(noFiltersNoHavings)),
-      HOST + '/v1/data/table1/grain1/d1/d2/?dateTime=2015-01-03/2015-01-04&' + 'metrics=m1,m2,r(p=123)&format=json',
+      HOST + '/v1/data/table1/grain1/d1/d2?dateTime=2015-01-03/2015-01-04&' + 'metrics=m1,m2,r(p=123)&format=json',
       'urlForFindQuery correctly built the URL for a request with no filters'
     );
 
@@ -633,7 +633,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     assert.equal(
       decodeURIComponent(Adapter.urlForFindQuery(requestWithSort)),
       HOST +
-        '/v1/data/table1/grain1/d1/d2/?dateTime=2015-01-03/2015-01-04&' +
+        '/v1/data/table1/grain1/d1/d2?dateTime=2015-01-03/2015-01-04&' +
         'metrics=m1,m2,r(p=123)&sort=m1|desc,m2|desc&format=json',
       'urlForFindQuery correctly built the URL for a request with sort'
     );
@@ -641,7 +641,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     assert.equal(
       decodeURIComponent(Adapter.urlForFindQuery(TestRequest, { cache: false })),
       HOST +
-        '/v1/data/table1/grain1/d1/d2/?dateTime=2015-01-03/2015-01-04&' +
+        '/v1/data/table1/grain1/d1/d2?dateTime=2015-01-03/2015-01-04&' +
         'metrics=m1,m2,r(p=123)&filters=d3|id-in[v1,v2],d4|id-in[v3,v4],d5|id-notin[""]&having=m1-gt[0]&' +
         'format=json&_cache=false',
       'urlForFindQuery correctly built the URL for the provided request with the cache option'
@@ -650,7 +650,7 @@ module('Unit | Bard facts Adapter', function(hooks) {
     assert.equal(
       decodeURIComponent(Adapter.urlForFindQuery(TestRequest, { dataSourceName: 'blockhead' })),
       HOST2 +
-        '/v1/data/table1/grain1/d1/d2/?dateTime=2015-01-03/2015-01-04&' +
+        '/v1/data/table1/grain1/d1/d2?dateTime=2015-01-03/2015-01-04&' +
         'metrics=m1,m2,r(p=123)&filters=d3|id-in[v1,v2],d4|id-in[v3,v4],d5|id-notin[""]&having=m1-gt[0]&' +
         'format=json',
       'uriForFindQuery renders alternative host name if option is given'
