@@ -1,1 +1,13 @@
-{{yield}}
+<div class="input-group has-button">
+    <div class="input is-dark">
+        <Input @type="text" @placeholder="Search" @class="search-input" @key-down={{this.search}} />
+        <button {{on "click" this.search}} class="button has-icon search-button">
+            <i class="d-icon d-search is-small"></i>
+        </button>
+    </div>
+</div>
+<div class="results">
+    {{#each this.searchResults as |result|}}
+    <NaviSearchResult>A search result</NaviSearchResult>
+    {{/each}}
+</div>
