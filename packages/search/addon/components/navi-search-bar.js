@@ -6,12 +6,14 @@ import { action } from '@ember/object';
 export default class NaviSearchBarComponent extends Component {
   @service('navi-search-provider') searchProvider;
 
+  @tracked searchQuery;
   @tracked searchResults = [];
 
   searchProviders = this.searchProvider.all();
 
   @action
   search() {
-    this.searchResults = ['Oh hello!'];
+    debugger;
+    this.searchResults.push(this.searchQuery);
   }
 }
