@@ -13,7 +13,6 @@ export default class NaviSearchBarComponent extends Component {
 
   @action
   search() {
-    debugger;
-    this.searchResults.push(this.searchQuery);
+    this.searchResults = this.searchProviders.map(provider => provider.search(this.searchQuery));
   }
 }

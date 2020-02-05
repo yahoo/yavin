@@ -1,8 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, click } from '@ember/test-helpers';
+import { render, find, click, fillIn } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { set } from '@ember/object';
 
 module('Integration | Component | navi-search-bar', function(hooks) {
   setupRenderingTest(hooks);
@@ -19,7 +18,7 @@ module('Integration | Component | navi-search-bar', function(hooks) {
   test('click search button', async function(assert) {
     await render(hbs`<NaviSearchBar />`);
 
-    set(this, 'searchQuery', 'Hello!');
+    await fillIn('.search-input', 'Hello!');
 
     await click(find('.search-button'));
 
