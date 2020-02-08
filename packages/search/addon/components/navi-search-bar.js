@@ -12,7 +12,7 @@ export default class NaviSearchBarComponent extends Component {
   searchProviders = this.searchProvider.all();
 
   @action
-  search() {
-    this.searchResults = this.searchProviders.map(provider => provider.search(this.searchQuery));
+  async search() {
+    this.searchResults = await Promise.all(this.searchProviders.map(provider => provider.search(this.searchQuery)));
   }
 }
