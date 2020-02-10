@@ -1,7 +1,8 @@
 <div class="input-group has-button">
-    <div class="input is-dark">
+    <div class="input has-icon-back">
         <Input @type="text" @value={{this.searchQuery}} @placeholder="Search" @class="search-input"
             @key-down={{this.search}} />
+        <span class="d-icon d-search is-brand-700"></span>
         <button {{on "click" this.search}} class="button has-icon search-button">
             <i class="d-icon d-search is-small"></i>
         </button>
@@ -9,6 +10,8 @@
 </div>
 <div class="results">
     {{#each this.searchResults as |result|}}
-    <NaviSearchResult>A search result</NaviSearchResult>
+    {{#if @result.data.content}}
+    <NaviSearchResult @title={{result.title}} @component={{result.component}} @data={{result.data}} />
+    {{/if}}
     {{/each}}
 </div>

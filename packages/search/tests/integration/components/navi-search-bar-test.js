@@ -30,13 +30,25 @@ module('Integration | Component | navi-search-bar', function(hooks) {
     assert.equal(this.element.textContent.trim(), '');
   });
 
-  test('click search button', async function(assert) {
+  test('click search button no results', async function(assert) {
     await render(hbs`<NaviSearchBar />`);
 
     await fillIn('.search-input', 'Hello!');
 
     await click(find('.search-button'));
 
-    assert.dom('.results').hasText('A search result');
+    assert.dom('.results').exists();
+    assert.dom('.results').hasText('');
+  });
+
+  test('click search button with results', async function(assert) {
+    await render(hbs`<NaviSearchBar />`);
+
+    await fillIn('.search-input', 'H');
+
+    await click(find('.search-button'));
+
+    assert.dom('.results').exists();
+    assert.dom('.results').hasText('My Reports & Dashboards');
   });
 });
