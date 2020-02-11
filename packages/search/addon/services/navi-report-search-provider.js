@@ -22,7 +22,7 @@ export default class NaviReportSearchProviderService extends NaviBaseSearchProvi
   /**
    * @property name
    */
-  name = 'My Reports & Dashboards';
+  name = 'Reports & Dashboards';
 
   /**
    * @property associatedComponent

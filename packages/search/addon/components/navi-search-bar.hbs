@@ -10,7 +10,7 @@
 </div>
 <div class="results">
     {{#each this.searchResults as |result|}}
-    {{#if @result.data.content}}
+    {{#if result.data}}
     <NaviSearchResult @title={{result.title}} @component={{result.component}} @data={{result.data}} />
     {{/if}}
     {{/each}}

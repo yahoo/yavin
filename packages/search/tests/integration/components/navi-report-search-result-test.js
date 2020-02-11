@@ -13,14 +13,5 @@ module('Integration | Component | navi-report-search-result', function(hooks) {
     await render(hbs`<NaviReportSearchResult />`);
 
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      <NaviReportSearchResult>
-        template block text
-      </NaviReportSearchResult>
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });
