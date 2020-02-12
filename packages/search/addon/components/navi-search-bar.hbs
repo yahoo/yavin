@@ -9,9 +9,7 @@
     </div>
 </div>
 <div class="results">
-    {{#each this.searchResults as |result|}}
-    {{#if result.data}}
-    <NaviSearchResult @title={{result.title}} @component={{result.component}} @data={{result.data}} />
-    {{/if}}
+    {{#each this.searchProviders as |provider|}}
+    {{component provider query=this.searchQuery}}
     {{/each}}
 </div>

@@ -85,6 +85,7 @@ export default class NaviReportSearchProviderService extends NaviBaseSearchProvi
    */
   search(query) {
     const parsedQuery = this._parseQueryString(query);
+    debugger;
     return this.store.query('report', this._constructSearchQuery(parsedQuery.searchParams, parsedQuery.author));
   }
 }
