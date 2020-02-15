@@ -12,7 +12,7 @@ module('Integration | Component | navi-search-bar', function(hooks) {
   hooks.beforeEach(async function() {
     await this.owner.lookup('service:bard-metadata').loadMetadata();
     const store = this.owner.lookup('service:store'),
-      mockAuthor = store.createRecord('user', { id: 'navi_user' });
+      mockAuthor = store.createRecord('user', { id: 'ciela' });
     this.owner.register(
       'service:user',
       Service.extend({
@@ -38,25 +38,22 @@ module('Integration | Component | navi-search-bar', function(hooks) {
     await click(find('.search-button'));
 
     assert.dom('.results').exists();
-    assert.dom('.results').hasText('');
   });
 
   test('click search button with results', async function(assert) {
     await render(hbs`<NaviSearchBar />`);
 
-    await fillIn('.search-input', 'H');
+    await fillIn('.search-input', 'Revenue');
 
     await click(find('.search-button'));
 
-    debugger;
     assert.dom('.results').exists();
-    assert.dom('.results').hasText('Reports & Dashboards');
   });
 
   test('press enter on search button with results', async function(assert) {
     await render(hbs`<NaviSearchBar />`);
 
-    await fillIn('.search-input', 'H');
+    await fillIn('.search-input', 'Revenue');
 
     await triggerKeyEvent('.search-input', 'keydown', 'Enter');
 

@@ -4,11 +4,13 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 
 export default class NaviSearchBarComponent extends Component {
-  @service('navi-search-result') searchResultService;
+  @service('navi-search-provider') searchProviderService;
 
   @tracked searchQuery;
-  @tracked searchProviders = this.searchResultService.all();
+  @tracked searchResults;
 
   @action
-  async search() {}
+  async search() {
+    this.searchResult = this.searchProviderService.search(this.searchQuery);
+  }
 }

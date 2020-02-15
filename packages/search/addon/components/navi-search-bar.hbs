@@ -8,8 +8,10 @@
         </button>
     </div>
 </div>
+{{#if this.searchResults}}
 <div class="results">
-    {{#each this.searchProviders as |provider|}}
-    {{component provider query=this.searchQuery}}
+    {{#each this.searchResults as |result|}}
+    {{component result.component data=result.data}}
     {{/each}}
 </div>
+{{/if}}
