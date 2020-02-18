@@ -11,6 +11,6 @@ export default class NaviSearchBarComponent extends Component {
 
   @action
   async search() {
-    this.searchResult = this.searchProviderService.search(this.searchQuery);
+    this.searchResults = await this.searchProviderService.search(this.searchQuery);
   }
 }

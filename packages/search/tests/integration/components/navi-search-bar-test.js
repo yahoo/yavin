@@ -37,17 +37,7 @@ module('Integration | Component | navi-search-bar', function(hooks) {
 
     await click(find('.search-button'));
 
-    assert.dom('.results').exists();
-  });
-
-  test('click search button with results', async function(assert) {
-    await render(hbs`<NaviSearchBar />`);
-
-    await fillIn('.search-input', 'Revenue');
-
-    await click(find('.search-button'));
-
-    assert.dom('.results').exists();
+    assert.dom('.results').doesNotExist();
   });
 
   test('press enter on search button with results', async function(assert) {
@@ -56,6 +46,7 @@ module('Integration | Component | navi-search-bar', function(hooks) {
     await fillIn('.search-input', 'Revenue');
 
     await triggerKeyEvent('.search-input', 'keydown', 'Enter');
+    debugger;
 
     assert.dom('.results').exists();
     assert.dom('.results').hasClass('search-result');
