@@ -20,11 +20,6 @@ export default class ThresholdNaviCellRenderer extends MetricNaviCellRendererCom
   }
 
   /**
-   * @property {Array} classNameBindings - Binding with component class names
-   */
-  classNameBindings = ['valueIndicator'];
-
-  /**
    * @property {String} - classname binding to render the actual metric value
    */
   @computed('metricValue')
