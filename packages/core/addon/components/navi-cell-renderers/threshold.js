@@ -1,35 +1,36 @@
 /**
- * Copyright 2018, Yahoo Holdings Inc.
+ * Copyright 2020, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  *
  * Usage:
- * {{navi-cell-renderers/threshold
- *   data=row
- *   column=column
- *   request=request
- * }}
+ * <NaviCellRenderers::Threshold
+ *   @data={{this.row}}
+ *   @column={{this.column}}
+ *   @request={{this.request}}
+ * />
  */
 
-import MetricRender from 'navi-core/components/navi-cell-renderers/metric';
-import { computed, get } from '@ember/object';
+import MetricNaviCellRendererComponent from './metric';
+import { computed } from '@ember/object';
 
-export default MetricRender.extend({
-  /**
-   * @property {Array} classNames - list of component class names
-   */
-  classNames: ['table-cell-content', 'threshold'],
+// TODO: Fix metric-money???????
+export default class ThresholdNaviCellRenderer extends MetricNaviCellRendererComponent {
+  get extraClasses() {
+    return ['table-cell-content', 'threshold', this.valueIndicator].join(' ');
+  }
 
   /**
    * @property {Array} classNameBindings - Binding with component class names
    */
-  classNameBindings: ['valueIndicator'],
+  classNameBindings = ['valueIndicator'];
 
   /**
    * @property {String} - classname binding to render the actual metric value
    */
-  valueIndicator: computed('metricValue', function() {
-    let metricValue = get(this, 'metricValue'),
-      indicator = 'neutral';
+  @computed('metricValue')
+  get valueIndicator() {
+    const { metricValue } = this;
+    let indicator = 'neutral';
 
     if (metricValue > 0) {
       indicator = 'strong';
@@ -39,5 +40,5 @@ export default MetricRender.extend({
     }
 
     return indicator;
-  })
-});
+  }
+}

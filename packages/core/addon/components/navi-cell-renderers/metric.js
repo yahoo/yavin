@@ -1,45 +1,47 @@
 /**
- * Copyright 2018, Yahoo Holdings Inc.
+ * Copyright 2020, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  *
  * Usage:
- * {{navi-cell-renderers/metric
- *   data=row
- *   column=column
- *   request=request
- * }}
+ * <NaviCellRenderers::Metric
+ *   @data={{this.row}}
+ *   @column={{this.column}}
+ *   @request={{this.request}}
+ * />
  */
 
 import Component from '@ember/component';
 import layout from '../../templates/components/navi-cell-renderers/metric';
-import { computed, get } from '@ember/object';
+import { computed } from '@ember/object';
 import { oneWay } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import { canonicalizeColumnAttributes } from 'navi-data/utils/metric';
 import { smartFormatNumber } from 'navi-core/helpers/smart-format-number';
 import numeral from 'numeral';
+import { layout as templateLayout, tagName } from '@ember-decorators/component';
 
-export default Component.extend({
-  layout,
-
-  /**
-   * @property {Array} classNames - list of component class names
-   */
-  classNames: ['table-cell-content', 'metric'],
+@templateLayout(layout)
+@tagName('')
+class MetricNaviCellRendererComponent extends Component {
+  get extraClasses() {
+    return '';
+  }
 
   /**
    * @property {Object} attributes - metric name and optional parameters used to fetch the value for
    */
-  attributes: oneWay('column.attributes'),
+  @oneWay('column.attributes') attributes;
 
   /**
    * @property {Number} - value to be rendered on the cell
    */
-  metricValue: computed('data', 'attributes', function() {
-    let format = get(this, 'attributes.format'),
-      type = get(this, 'column.type'),
-      canonicalName = canonicalizeColumnAttributes(get(this, 'attributes')),
-      metricValue = get(this, `data.${canonicalName}`);
+  @computed('data', 'attributes')
+  get metricValue() {
+    const { attributes, column, data } = this;
+    const format = attributes?.format;
+    const type = column?.type;
+    const canonicalName = canonicalizeColumnAttributes(attributes);
+    const metricValue = data?.[canonicalName];
 
     if (isEmpty(metricValue)) {
       return '--';
@@ -50,5 +52,7 @@ export default Component.extend({
     }
 
     return type === 'metric' ? smartFormatNumber([metricValue]) : metricValue;
-  })
-});
+  }
+}
+
+export default MetricNaviCellRendererComponent;

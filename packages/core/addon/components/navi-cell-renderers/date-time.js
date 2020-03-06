@@ -1,33 +1,29 @@
 /**
- * Copyright 2017, Yahoo Holdings Inc.
+ * Copyright 2020, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  *
  * Usage:
- * {{navi-cell-renderers/date-time
- *   data=row
- *   column=column
- *   request=request
- * }}
+ * <NaviCellRenderers::DateTime
+ *   @data={{this.row}}
+ *   @column={{this.column}}
+ *   @request={{this.request}}
+ * />
  */
 
-import { alias } from '@ember/object/computed';
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { readOnly } from '@ember/object/computed';
+import { computed } from '@ember/object';
 import layout from '../../templates/components/navi-cell-renderers/date-time';
+import { layout as templateLayout, tagName } from '@ember-decorators/component';
 
-export default Component.extend({
-  layout,
-
-  /**
-   * @property {Array} classNames - list of component class names
-   */
-  classNames: ['table-cell-content', 'date-time'],
-
+@templateLayout(layout)
+@tagName('')
+class DateTimeNaviCellRendererComponent extends Component {
   /**
    * @property {String} value
    * Date start time from the response data or 'TOTAL'
    */
-  value: alias('data.dateTime'),
+  @readOnly('data.dateTime') value;
 
   /**
    * @property {String} granularity- Time Grain in request
@@ -35,7 +31,11 @@ export default Component.extend({
    * the model, timeGrain is an interval fragment in the model and a string in the serialized
    * request model
    */
-  granularity: computed('request.logicalTable.timeGrain', function() {
-    return get(this, 'request.logicalTable.timeGrain.name') || get(this, 'request.logicalTable.timeGrain');
-  })
-});
+  @computed('request.logicalTable.timeGrain')
+  get granularity() {
+    const timeGrain = this.request?.logicalTable?.timeGrain;
+    return timeGrain?.name || timeGrain;
+  }
+}
+
+export default DateTimeNaviCellRendererComponent;
