@@ -1,16 +1,16 @@
 /**
- * Copyright 2018, Yahoo Holdings Inc.
+ * Copyright 2020, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
 
 import BaseMetadataTransform from './base-metadata-transform';
 
-export default BaseMetadataTransform.extend({
+export default class MetricTransform extends BaseMetadataTransform {
   /**
    * @property {String} type - type of metadata
    * @override
    */
-  type: 'metric',
+  type = 'metric';
 
   /**
    * @method deserialize
@@ -23,6 +23,6 @@ export default BaseMetadataTransform.extend({
     }
 
     //for metric
-    return this._super(...arguments);
+    return super.deserialize(...arguments);
   }
-});
+}

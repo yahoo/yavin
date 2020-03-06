@@ -6,22 +6,23 @@
  */
 import Service, { inject as service } from '@ember/service';
 import { assert } from '@ember/debug';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { run } from '@ember/runloop';
 import JsonUrl from 'json-url';
 
-export default Service.extend({
+export default class CompressionService extends Service {
   /**
    * @property {Ember.Service} store
    */
-  store: service(),
+  @service store;
 
   /**
    * @property {Object} codec - compression library
    */
-  codec: computed(function() {
+  @computed
+  get codec() {
     return new JsonUrl('lzstring');
-  }),
+  }
 
   /**
    * @method compress
@@ -30,8 +31,8 @@ export default Service.extend({
    */
   compress(obj) {
     let payload = JSON.stringify(obj);
-    return get(this, 'codec').compress(payload);
-  },
+    return this.codec.compress(payload);
+  }
 
   /**
    * @method decompress
@@ -39,10 +40,8 @@ export default Service.extend({
    * @return {Promise} promise that resolvs to an object
    */
   decompress(string) {
-    return get(this, 'codec')
-      .decompress(string)
-      .then(jsonStr => JSON.parse(jsonStr));
-  },
+    return this.codec.decompress(string).then(jsonStr => JSON.parse(jsonStr));
+  }
 
   /**
    * @method compressModel
@@ -55,7 +54,7 @@ export default Service.extend({
     // Ember Data requires an id to push to the store
     assert('A model given to `compress` must have an id.', serializedModel.data.id);
     return this.compress(serializedModel);
-  },
+  }
 
   /**
    * @method decompressModel
@@ -64,7 +63,7 @@ export default Service.extend({
    */
   decompressModel(string) {
     return this.decompress(string).then(modelPayload => run(() => this._pushPayload(modelPayload)));
-  },
+  }
 
   /**
    * @method _pushPayload
@@ -78,10 +77,10 @@ export default Service.extend({
      * Remove when `ds-pushpayload-return` feature flag has become default behavior in Ember Data
      * or when [store.push is overhauled](https://github.com/emberjs/rfcs/pull/161)
      */
-    let store = get(this, 'store'),
-      defaultSerializer = store.serializerFor('application'),
-      normalizedPayload = defaultSerializer._normalizeDocumentHelper(payload);
+    const { store } = this;
+    const defaultSerializer = store.serializerFor('application');
+    const normalizedPayload = defaultSerializer._normalizeDocumentHelper(payload);
 
     return store.push(normalizedPayload);
   }
-});
+}

@@ -23,7 +23,7 @@
  *}
  */
 import Mixin from '@ember/object/mixin';
-import EmberObject, { set, get, computed } from '@ember/object';
+import EmberObject, { set, computed } from '@ember/object';
 import moment from 'moment';
 import DataGroup from 'navi-core/utils/classes/data-group';
 import Interval from 'navi-core/utils/classes/interval';
@@ -33,7 +33,7 @@ import ChartAxisDateTimeFormats from 'navi-core/utils/chart-axis-date-time-forma
 import { groupDataByDimensions, buildSeriesKey, getSeriesName } from 'navi-core/utils/chart-data';
 import { canonicalizeMetric } from 'navi-data/utils/metric';
 
-export default EmberObject.extend({
+export default class DimensionChartBuilder extends EmberObject {
   /**
    * @method getSeriesName
    * @param {Object} row - single row of fact data
@@ -41,18 +41,18 @@ export default EmberObject.extend({
    * @param {Object} request - request used to query fact data
    * @returns {String} name of series given row belongs to
    */
-  getSeriesName: (row, config /*, request */) => {
+  getSeriesName(row, config /*, request */) {
     let dimensionOrder = config.dimensionOrder;
 
-    return dimensionOrder.map(dim => get(row, `${dim}|id`)).join(',');
-  },
+    return dimensionOrder.map(dim => row[`${dim}|id`]).join(',');
+  }
 
   /**
    * @method getXValue
    * @param {Object} row - single row of fact data
    * @returns {String} name of x value given row belongs to
    */
-  getXValue: row => moment(row.dateTime).format(DateUtils.API_DATE_FORMAT_STRING),
+  getXValue = row => moment(row.dateTime).format(DateUtils.API_DATE_FORMAT_STRING);
 
   /**
    * @function buildData
@@ -82,8 +82,8 @@ export default EmberObject.extend({
       seriesKey = buildSeriesKey(config), // Build the series required
       seriesName = getSeriesName(config), // Get all the series names
       byDate = new DataGroup(data, row => buildDateKey(row.dateTime)), // Group by dates for easier lookup
-      grain = get(request, 'logicalTable.timeGrain.name') || get(request, 'logicalTable.timeGrain'),
-      requestInterval = Interval.parseFromStrings(get(request, 'intervals.0.start'), get(request, 'intervals.0.end'));
+      grain = request.logicalTable?.timeGrain?.name || request.logicalTable?.timeGrain,
+      requestInterval = Interval.parseFromStrings(request.intervals?.[0]?.start, request.intervals?.[0]?.end);
 
     // For each unique date, build the series
     return DateUtils.getDatesForInterval(requestInterval, grain).map(date => {
@@ -129,7 +129,7 @@ export default EmberObject.extend({
       // Return the data for Date
       return dataForDate;
     });
-  },
+  }
 
   /**
    * @function buildTooltip
@@ -145,13 +145,13 @@ export default EmberObject.extend({
        * @property {Object[]} rowData - maps a response row to each series in a tooltip
        */
       rowData: computed('x', 'tooltipData', function() {
-        return get(this, 'tooltipData').map(series => {
+        return this.tooltipData.map(series => {
           // Get the full data for this combination of x + series
-          let dataForSeries = get(builder, 'byXSeries').getDataForKey(get(this, 'x') + series.id) || [];
+          let dataForSeries = builder.byXSeries.getDataForKey(this.x + series.id) || [];
 
           return dataForSeries[0];
         });
       })
     });
   }
-});
+}

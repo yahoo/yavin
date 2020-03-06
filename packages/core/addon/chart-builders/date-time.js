@@ -17,7 +17,7 @@ import Mixin from '@ember/object/mixin';
 import moment from 'moment';
 import tooltipLayout from '../templates/chart-tooltips/date';
 import DataGroup from 'navi-core/utils/classes/data-group';
-import EmberObject, { get, set, getWithDefault, computed } from '@ember/object';
+import EmberObject, { set, getWithDefault, computed } from '@ember/object';
 import { canonicalizeMetric } from 'navi-data/utils/metric';
 
 const API_DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss.SSS';
@@ -130,7 +130,7 @@ export const GROUP = {
  */
 const _groupDataBySeries = (data, metric, grouper) => {
   return data.reduce((map, row) => {
-    let dateTime = moment(get(row, 'dateTime'), API_DATE_FORMAT),
+    let dateTime = moment(row.dateTime, API_DATE_FORMAT),
       series = grouper.getSeries(dateTime),
       x = grouper.getXValue(dateTime);
 
@@ -138,7 +138,7 @@ const _groupDataBySeries = (data, metric, grouper) => {
       map[series] = {};
     }
 
-    map[series][x] = get(row, metric);
+    map[series][x] = row[metric];
 
     return map;
   }, {});
@@ -186,13 +186,13 @@ const _buildDataRows = (seriesMap, grouper) => {
  * @returns {Object} grouper for request and config
  */
 const _getGrouper = (request, config) => {
-  let timeGrain = get(request, 'logicalTable.timeGrain'),
-    seriesTimeGrain = get(config, 'timeGrain');
+  const timeGrain = request.logicalTable?.timeGrain;
+  const seriesTimeGrain = config.timeGrain;
 
   return GROUP[timeGrain].by[seriesTimeGrain];
 };
 
-export default EmberObject.extend({
+export default class DateTimeChartBuilder extends EmberObject {
   /**
    * @method getSeriesName
    * @param {Object} row - single row of fact data
@@ -204,7 +204,7 @@ export default EmberObject.extend({
     let grouper = _getGrouper(request, config);
 
     return grouper.getSeries(moment(row.dateTime));
-  },
+  }
 
   /**
    * @method getXValue
@@ -217,7 +217,7 @@ export default EmberObject.extend({
     let grouper = _getGrouper(request, config);
 
     return grouper.getXValue(moment(row.dateTime));
-  },
+  }
 
   /**
    * @function buildData
@@ -242,13 +242,13 @@ export default EmberObject.extend({
     );
 
     let { timeGrain: seriesTimeGrain, metric } = config,
-      requestTimeGrain = get(request, 'logicalTable.timeGrain'),
+      requestTimeGrain = request.logicalTable?.timeGrain,
       grouper = GROUP[requestTimeGrain].by[seriesTimeGrain],
       canonicalName = canonicalizeMetric(metric);
 
     let seriesMap = _groupDataBySeries(data, canonicalName, grouper);
     return _buildDataRows(seriesMap, grouper);
-  },
+  }
 
   /**
    * @function buildTooltip
@@ -265,13 +265,13 @@ export default EmberObject.extend({
        * @property {Object[]} rowData - maps a response row to each series in a tooltip
        */
       rowData: computed('x', 'tooltipData', function() {
-        return get(this, 'tooltipData').map(series => {
+        return this.tooltipData.map(series => {
           // Get the full data for this combination of x + series
-          let dataForSeries = get(builder, 'byXSeries').getDataForKey(get(this, 'x') + series.name) || [];
+          let dataForSeries = builder.byXSeries.getDataForKey(this.x + series.name) || [];
 
           return dataForSeries[0];
         });
       })
     });
   }
-});
+}

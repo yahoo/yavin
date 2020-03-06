@@ -7,18 +7,18 @@
 
 import Service from '@ember/service';
 import { getOwner } from '@ember/application';
-import { set, getWithDefault, get } from '@ember/object';
+import { getWithDefault } from '@ember/object';
 
-export default Service.extend({
+export default class ActionDispatcherService extends Service {
   /**
    * @property {Array} consumers - list of consumers to be registered on init
    */
-  consumers: undefined,
+  consumers;
 
   /**
    * @property {Array} _registeredConsumers - list of registered consumers instances
    */
-  _registeredConsumers: undefined,
+  _registeredConsumers = [];
 
   /**
    * Initializes service on creation
@@ -26,11 +26,10 @@ export default Service.extend({
    * @method init
    * @returns {Void}
    */
-  init() {
-    this._super(...arguments);
-    set(this, '_registeredConsumers', []);
+  constructor() {
+    super(...arguments);
     getWithDefault(this, 'consumers', []).forEach(consumer => this.registerConsumer(consumer));
-  },
+  }
 
   /**
    * Registers a consumer object with the dispatcher service
@@ -40,8 +39,8 @@ export default Service.extend({
    * @returns {Void}
    */
   registerConsumer(consumer) {
-    get(this, '_registeredConsumers').push(getOwner(this).lookup(`consumer:${consumer}`));
-  },
+    this._registeredConsumers.push(getOwner(this).lookup(`consumer:${consumer}`));
+  }
 
   /**
    * Dispatches an action to all of the consumers
@@ -52,6 +51,6 @@ export default Service.extend({
    * @returns {Void}
    */
   dispatch(actionType, ...params) {
-    get(this, '_registeredConsumers').forEach(consumer => consumer.send(actionType, ...params));
+    this._registeredConsumers.forEach(consumer => consumer.send(actionType, ...params));
   }
-});
+}

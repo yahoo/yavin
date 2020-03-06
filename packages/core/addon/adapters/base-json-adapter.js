@@ -4,23 +4,24 @@
  */
 
 import { camelize } from '@ember/string';
-import { computed, getWithDefault, get } from '@ember/object';
+import { computed, getWithDefault } from '@ember/object';
 import DS from 'ember-data';
 import config from 'ember-get-config';
 import { pluralize } from 'ember-inflector';
 
-export default DS.JSONAPIAdapter.extend({
+export default class BaseJsonAdapter extends DS.JSONAPIAdapter {
   /**
    * @property {String} host - persistence WS host
    */
-  host: computed(function() {
+  @computed
+  get host() {
     return getWithDefault(config, 'navi.appPersistence.uri', '');
-  }),
+  }
 
   /**
    * @property {Boolean} - coalesceFindRequests - optimize requests for fetching multiple records at once
    */
-  coalesceFindRequests: true,
+  coalesceFindRequests = true;
 
   /**
    * Get ajax options
@@ -30,7 +31,7 @@ export default DS.JSONAPIAdapter.extend({
    * @return {Object} - options hash
    */
   ajaxOptions() {
-    let hash = this._super(...arguments);
+    let hash = super.ajaxOptions(...arguments);
     hash.xhrFields = {
       withCredentials: true
     };
@@ -40,7 +41,7 @@ export default DS.JSONAPIAdapter.extend({
       'Content-Type': 'application/vnd.api+json'
     };
     return hash;
-  },
+  }
 
   /**
    * Don't reload models in the background by default when fetching records
@@ -51,7 +52,7 @@ export default DS.JSONAPIAdapter.extend({
    */
   shouldBackgroundReloadRecord() {
     return false;
-  },
+  }
 
   /**
    * @override
@@ -71,7 +72,7 @@ export default DS.JSONAPIAdapter.extend({
     return this.ajax(url, 'GET', {
       data: { filter: { [filterId]: ids.join(',') } }
     });
-  },
+  }
 
   /**
    * @method normalizeErrorResponse
@@ -84,15 +85,14 @@ export default DS.JSONAPIAdapter.extend({
    *
    */
   normalizeErrorResponse(status, headers, payload) {
-    let detail = get(payload, 'errors');
     return [
       {
         status: `${status}`,
         title: 'The backend responded with an error',
-        detail
+        detail: payload.errors
       }
     ];
-  },
+  }
 
   /**
    * Formats type for url
@@ -105,4 +105,4 @@ export default DS.JSONAPIAdapter.extend({
   pathForType(type) {
     return pluralize(camelize(type));
   }
-});
+}

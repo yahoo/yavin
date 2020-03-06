@@ -4,16 +4,15 @@
  */
 
 import Service, { inject as service } from '@ember/service';
-import { get } from '@ember/object';
 import config from 'ember-get-config';
 
 const NOT_FOUND = '404';
 
-export default Service.extend({
+export default class UserService extends Service {
   /**
    * @property {Ember.Service} store
    */
-  store: service(),
+  @service store;
 
   /**
    * Gets user model given user ID without triggering a fetch, if  user ID not specified gets logged-in user
@@ -23,8 +22,8 @@ export default Service.extend({
    * @returns {DS.Model} - user model, if not found returns null
    */
   getUser(userId = config.navi.user) {
-    return get(this, 'store').peekRecord('user', userId);
-  },
+    return this.store.peekRecord('user', userId);
+  }
 
   /**
    * Finds user given user ID, if user ID not specified gets logged-in user
@@ -34,8 +33,8 @@ export default Service.extend({
    * @returns {Promise} - Promise containing user model
    */
   findUser(userId = config.navi.user) {
-    return get(this, 'store').findRecord('user', userId);
-  },
+    return this.store.findRecord('user', userId);
+  }
 
   /**
    * Registers logged-in user
@@ -45,10 +44,10 @@ export default Service.extend({
    */
   register() {
     let userId = config.navi.user,
-      userModel = get(this, 'store').createRecord('user', { id: userId });
+      userModel = this.store.createRecord('user', { id: userId });
 
     return userModel.save();
-  },
+  }
 
   /**
    * Finds logged-in user, if not present registers user
@@ -58,7 +57,7 @@ export default Service.extend({
    */
   findOrRegister() {
     return this.findUser().catch(serverError => {
-      if (get(serverError, 'errors.0.status') === NOT_FOUND) {
+      if (serverError.errors?.[0]?.status === NOT_FOUND) {
         return this.register();
       }
 
@@ -66,4 +65,4 @@ export default Service.extend({
       throw serverError;
     });
   }
-});
+}

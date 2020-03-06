@@ -1,12 +1,11 @@
 /**
- * Copyright 2017, Yahoo Holdings Inc.
+ * Copyright 2020, Yahoo Holdings Inc.
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
 
 import BaseAdapter from 'navi-core/adapters/base-json-adapter';
-import { get } from '@ember/object';
 
-export default BaseAdapter.extend({
+export default class DashboardWidgetAdapter extends BaseAdapter {
   /**
    * @method urlForUpdateRecord
    * @override
@@ -17,7 +16,7 @@ export default BaseAdapter.extend({
    */
   urlForUpdateRecord(id, modelName, snapshot) {
     return this._urlWithDashboardId(modelName, snapshot);
-  },
+  }
 
   /**
    * @method urlForCreateRecord
@@ -28,7 +27,7 @@ export default BaseAdapter.extend({
    */
   urlForCreateRecord(modelName, snapshot) {
     return this._urlWithDashboardId(modelName, snapshot);
-  },
+  }
 
   /**
    * @method urlForDeleteRecord
@@ -40,7 +39,7 @@ export default BaseAdapter.extend({
    */
   urlForDeleteRecord(id, modelName, snapshot) {
     return this._urlWithDashboardId(modelName, snapshot);
-  },
+  }
 
   /**
    * Build a url to a widget with the parent dashboard
@@ -52,10 +51,10 @@ export default BaseAdapter.extend({
    * @return {String} url
    */
   _urlWithDashboardId(modelName, snapshot) {
-    let host = get(this, 'host'),
-      prefix = this.urlPrefix(),
-      dashboardId = snapshot.belongsTo('dashboard').id,
-      widgetId = get(snapshot, 'id') || '';
+    const { host } = this;
+    const prefix = this.urlPrefix();
+    const dashboardId = snapshot.belongsTo('dashboard').id;
+    const widgetId = snapshot.id || '';
 
     let url = `${prefix}/dashboards/${dashboardId}/widgets/${widgetId}`;
 
@@ -65,4 +64,4 @@ export default BaseAdapter.extend({
 
     return url;
   }
-});
+}
