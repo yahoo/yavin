@@ -3,7 +3,6 @@
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
 import ActionDispatcher from 'navi-core/services/action-dispatcher';
-import { computed } from '@ember/object';
 
 export const RequestActions = {
   ADD_DIMENSION: 'addDimension',
@@ -38,18 +37,15 @@ export const RequestActions = {
   UPSERT_SORT: 'upsertSort'
 };
 
-export default ActionDispatcher.extend({
-  /**
-   * @property {Array} concatenatedProperties
-   */
-  concatenatedProperties: ['consumers'],
-
-  consumers: computed(() => [
-    'request/dimension',
-    'request/filter',
-    'request/logical-table',
-    'request/metric',
-    'request/time-grain',
-    'request/sort'
-  ])
-});
+export default class RequestActionDispatcher extends ActionDispatcher {
+  get consumers() {
+    return [
+      'request/dimension',
+      'request/filter',
+      'request/logical-table',
+      'request/metric',
+      'request/time-grain',
+      'request/sort'
+    ];
+  }
+}

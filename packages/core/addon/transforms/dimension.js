@@ -10,5 +10,5 @@ export default class DimensionTransforme extends BaseMetadataTransform {
    * @property {String} type - type of metadata
    * @override
    */
-  type: 'dimension';
+  type = 'dimension';
 }

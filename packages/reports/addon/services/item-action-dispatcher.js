@@ -3,7 +3,6 @@
  * Licensed under the terms of the MIT license. See accompanying LICENSE.md file for terms.
  */
 import ActionDispatcher from 'navi-core/services/action-dispatcher';
-import { computed } from '@ember/object';
 
 export const ItemActions = Object.assign(
   {},
@@ -12,9 +11,11 @@ export const ItemActions = Object.assign(
   }
 );
 
-export default ActionDispatcher.extend({
+export default class ItemActionDispatcher extends ActionDispatcher {
   /**
    * @property {Array} consumers
    */
-  consumers: computed(() => ['item'])
-});
+  get consumers() {
+    return ['item'];
+  }
+}

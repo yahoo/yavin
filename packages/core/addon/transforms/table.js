@@ -10,5 +10,5 @@ export default class TableTransform extends BaseMetadataTransform {
    * @property {String} type - type of metadata
    * @override
    */
-  type: 'table';
+  type = 'table';
 }

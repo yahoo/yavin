@@ -33,9 +33,8 @@ module('Unit | Service | action-dispatcher', function(hooks) {
       }
     });
 
-    let testService = ServiceFactory.create({
-      consumers: ['foo', 'bar']
-    });
+    const testService = ServiceFactory.create();
+    ['foo', 'bar'].forEach(c => testService.registerConsumer(c));
 
     testService.dispatch('actionOne', 1, 42);
   });
@@ -57,9 +56,8 @@ module('Unit | Service | action-dispatcher', function(hooks) {
       }
     });
 
-    let testService = ServiceFactory.create({
-      consumers: ['foo', 'bar']
-    });
+    const testService = ServiceFactory.create();
+    ['foo', 'bar'].forEach(c => testService.registerConsumer(c));
 
     testService.dispatch('actionOne', 1);
 
