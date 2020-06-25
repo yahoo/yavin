@@ -11,7 +11,7 @@ import NaviFactsModel from 'navi-data/models/navi-facts';
 //@ts-ignore
 import RequestBuilder from 'navi-data/builder/request';
 import config from 'ember-get-config';
-import NaviFactAdapter, { RequestV1, RequestOptions } from 'navi-data/adapters/fact-interface';
+import NaviFactAdapter, { RequestV1, RequestOptions, AsyncQuery } from 'navi-data/adapters/fact-interface';
 import NaviFactSerializer, { ResponseV1 } from 'navi-data/serializers/fact-interface';
 
 export default class NaviFactsService extends Service {
@@ -33,6 +33,10 @@ export default class NaviFactsService extends Service {
    */
   _serializerFor(type = 'bard-facts'): NaviFactSerializer {
     return getOwner(this).lookup(`serializer:${type}`);
+  }
+
+  _asyncQueryFor(type = 'elide') {
+    return getOwner(this).factoryFor(`model:async-query/${type}`);
   }
 
   /**
@@ -61,8 +65,6 @@ export default class NaviFactsService extends Service {
   /**
    * @method fetch - Returns the bard response model for the request
    * @param {Object} request - request object
-   * @param {Object} [options] - options object
-   * @param {Number} [options.timeout] - milliseconds to wait before timing out
    * @param {String} [options.clientId] - clientId value to be passed as a request header
    * @param {Object} [options.customHeaders] - hash of header names and values
    * @returns {Promise} - Promise with the bard response model object
@@ -78,6 +80,16 @@ export default class NaviFactsService extends Service {
         response: serializer.normalize(payload),
         _factsService: this
       });
+    });
+  }
+
+  asyncFetch(request: RequestV1, requestOptions: RequestOptions): AsyncQuery {
+    const type = config.navi.dataSources[0].type;
+    const AsyncQuery = this._asyncQueryFor(type);
+
+    return AsyncQuery.create({
+      ...{ request, requestOptions },
+      ...getOwner(this).ownerInjection()
     });
   }
 

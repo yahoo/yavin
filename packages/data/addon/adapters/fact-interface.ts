@@ -4,6 +4,7 @@
  */
 
 import NaviFactsModel from 'navi-data/models/navi-facts';
+import EmberObject from '@ember/object';
 
 export type RequestV1 = TODO;
 
@@ -69,7 +70,7 @@ export enum QueryStatus {
   FAILURE = 'failure'
 }
 
-export interface AsyncQuery {
+export interface AsyncQuery extends EmberObject {
   requestId: string;
   principalName: string;
   request: RequestV1 | RequestV2;
