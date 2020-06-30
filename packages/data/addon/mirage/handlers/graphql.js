@@ -149,23 +149,26 @@ const OPTIONS = {
     }
   },
   mutations: {
-    asyncQuery(asyncQueries, { op, data }) {
+    asyncQuery(connection, { op, data }, { asyncQueries }) {
       const queryIds = data.id ? [data.id] : [];
       const existingQueries = asyncQueries.find(queryIds) || [];
       if (op === 'UPSERT' && existingQueries.length === 0) {
-        asyncQueries.add({
+        const node = asyncQueries.insert({
           id: data.id,
           asyncAfterSeconds: 10,
           requestId: data.id,
           query: data.query,
           queryType: data.queryType,
           status: data.status,
-          createdOn: Date.now()
+          createdOn: Date.now(),
+          result: null
         });
+        return { edges: [{ node }] };
       } else if (op === 'UPDATE' && existingQueries.length > 0) {
         existingQueries.forEach(query => {
           query.status = data.status;
         });
+        return { edges: existingQueries.map(node => ({ node })) };
       } else {
         throw new Error(`Unable to ${op} when ${existingQueries.length} queries exist with id `);
       }

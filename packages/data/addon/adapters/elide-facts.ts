@@ -4,7 +4,7 @@
  */
 import EmberObject from '@ember/object';
 import { queryManager } from 'ember-apollo-client';
-import { RequestV1, RequestOptions, AsyncQueryResponse } from './fact-interface';
+import { RequestV1, RequestOptions, AsyncQueryResponse, QueryStatus } from './fact-interface';
 import { DocumentNode } from 'graphql';
 import GQLQueries from 'navi-data/gql/fact-queries';
 import { task, timeout } from 'ember-concurrency';
@@ -125,26 +125,22 @@ export default class ElideFacts extends EmberObject {
    * @param request
    * @param options
    */
-  @task(function*(request: RequestV1, options: RequestOptions) {
-    let asyncQueryPayload;
-    try {
-      //@ts-ignore
-      asyncQueryPayload = yield this.createAsyncQueryRequest(request, options);
-    } catch (e) {
-      return Promise.reject(e);
-    }
-    let { result, id } = asyncQueryPayload.asyncQuery.edges[0].node;
+  @task(function*(this: ElideFacts, request: RequestV1, options: RequestOptions) {
+    let asyncQueryPayload = yield this.createAsyncQueryRequest(request, options);
+    const asyncQuery = asyncQueryPayload?.asyncQuery.edges[0]?.node;
+    const { id } = asyncQuery;
+    let status: QueryStatus = asyncQuery.status;
 
-    while (result === null) {
-      //@ts-ignore
+    while (status === QueryStatus.QUEUED || status === QueryStatus.PROCESSING) {
       yield timeout(this._pollingInterval);
-      //@ts-ignore
       asyncQueryPayload = yield this.fetchAsyncQueryData(id);
-      result = asyncQueryPayload?.asyncQuery?.edges[0]?.node.result;
+      status = asyncQueryPayload?.asyncQuery.edges[0]?.node.status;
     }
-
-    return result;
+    return asyncQueryPayload;
   })
-  //@ts-ignore
-  fetchDataForRequest: Promise<TODO>;
+  fetchDataForRequestTask!: TODO;
+
+  fetchDataForRequest(this: ElideFacts, request: RequestV1, options: RequestOptions): Promise<TODO> {
+    return this.fetchDataForRequestTask.perform(request, options);
+  }
 }

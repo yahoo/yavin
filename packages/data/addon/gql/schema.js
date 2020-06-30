@@ -288,7 +288,7 @@ const schema = gql`
       first: String
       after: String
       data: [AsyncQueryInput]
-    ): AsyncQuery
+    ): AsyncQueryConnection
   }
 
   type Mutation {

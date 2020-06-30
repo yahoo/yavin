@@ -10,6 +10,7 @@ export default class ApplicationRoute extends Route {
    * @property {Ember.Service}
    */
   @service bardMetadata;
+  @service elideMetadata;
 
   /**
    * @property {Ember.Service}
@@ -22,6 +23,10 @@ export default class ApplicationRoute extends Route {
    * @returns {Ember.RSVP.Promise}
    */
   async model() {
-    await Promise.all([this.user.findOrRegister(), this.bardMetadata.loadMetadata()]);
+    await Promise.all([
+      this.user.findOrRegister(),
+      this.bardMetadata.loadMetadata(),
+      this.elideMetadata.loadMetadata()
+    ]);
   }
 }

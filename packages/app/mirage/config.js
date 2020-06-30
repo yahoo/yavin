@@ -6,6 +6,7 @@
 import faker from 'faker';
 import config from 'navi-app/config/environment';
 import BardLite from 'navi-data/mirage/routes/bard-lite';
+import graphQLHandler from 'navi-data/mirage/handlers/graphql';
 import BardMeta from './bard-meta-stub';
 import user from 'navi-app/mirage/routes/user';
 import report from 'navi-app/mirage/routes/report';
@@ -32,13 +33,17 @@ export default function() {
   // https://github.com/kategengler/ember-cli-code-coverage#create-a-passthrough-when-intercepting-all-ajax-requests-in-tests
   this.passthrough('/write-coverage');
 
+  this.urlPrefix = `${config.navi.dataSources[0].uri}/`;
+  this.post('/graphql', graphQLHandler);
+
   // Mock bard facts + metadata
   this.urlPrefix = `${config.navi.dataSources[0].uri}/v1`;
   const metricBuilder = (metric, row, dimensionKey) => {
     faker.seed(hashCode(`${row.dateTime}_${dimensionKey}_${metric}`));
     return faker.finance.amount();
   };
-  BardLite.call(this, metricBuilder);
+
+  //BardLite.call(this, metricBuilder);
   BardMeta.call(this);
 
   // Mock persistence

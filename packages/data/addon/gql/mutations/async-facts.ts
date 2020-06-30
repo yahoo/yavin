@@ -5,7 +5,7 @@
 import gql from 'graphql-tag';
 
 export const asyncFactsMutationStr = `
-  mutation($id: String, $query: String) {
+  mutation($id: ID, $query: String) {
     asyncQuery(op: UPSERT, data: { id: $id, query: $query, queryType: GRAPHQL_V1_0, status: QUEUED }) {
       edges {
         node {

@@ -308,7 +308,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
                   id: queryId,
                   query: queryVariable,
                   queryType: 'GRAPHQL_V1_0',
-                  status: 'QUEUED',
+                  status: callCount !== 5 ? 'QUEUED' : 'COMPLETE',
                   result
                 }
               }
@@ -327,7 +327,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
     });
 
     const result = await adapter.fetchDataForRequest.perform(TestRequest);
-    assert.deepEqual(result, expectedResponse.asyncQuery?.edges[0].node.result, 'Result has correct format');
+    assert.deepEqual(result, expectedResponse, 'Result has correct format');
 
     Server.shutdown();
   });

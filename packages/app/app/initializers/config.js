@@ -7,7 +7,9 @@ import config from 'navi-app/config/environment';
 export function initialize() {
   // Add server provided app settings into the environment
   config.appSettings = window.NAVI_APP.appSettings;
-
+  config.apollo = {
+    apiURL: config.appSettings.factApiHost
+  };
   // Navi specific configuration
   Object.assign(config.navi, {
     user: config.appSettings.user,
@@ -15,7 +17,7 @@ export function initialize() {
      *TODO: set epoch date
      *dataEpoch: NAVI_APP.appSettings.dataEpoch,
      */
-    dataSources: [{ name: 'default', uri: config.appSettings.factApiHost }],
+    dataSources: [{ name: 'default', uri: config.appSettings.factApiHost, type: 'elide-facts' }],
     appPersistence: {
       type: 'webservice',
       uri: config.appSettings.persistenceApiHost,
