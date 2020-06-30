@@ -61,12 +61,16 @@ export type RequestV2 = {
 };
 
 export enum QueryStatus {
-  COMPLETE = 'complete',
-  QUEUED = 'queued',
-  PROCESSING = 'processing',
-  CANCELLED = 'cancelled',
-  TIMEDOUT = 'timedout',
-  FAILURE = 'failure'
+  COMPLETE = 'COMPLETE',
+  QUEUED = 'QUEUED',
+  PROCESSING = 'PROCESSING',
+  CANCELLED = 'CANCELLED',
+  TIMEDOUT = 'TIMEDOUT',
+  FAILURE = 'FAILURE'
+}
+
+export enum QueryResultType {
+  EMBEDDED = 'EMBEDDED'
 }
 
 export interface AsyncQuery {
@@ -87,7 +91,6 @@ export type AsyncQueryResponse = {
         node: {
           id: string;
           query: string;
-          queryType: string;
           status: QueryStatus;
           result: AsyncQueryResult | null;
         };
@@ -99,6 +102,7 @@ export type AsyncQueryResponse = {
 export interface AsyncQueryResult {
   httpStatus: number;
   contentLength: number;
+  resultType: QueryResultType;
   responseBody: string;
 }
 
