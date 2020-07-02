@@ -10,7 +10,7 @@ export default class NaviElideApolloService extends ApolloService {
   /**
    * @property {String} namespace
    */
-  namespace = 'graphql';
+  namespace = 'graphql/api/v1';
 
   /**
    * @override
@@ -57,7 +57,6 @@ export default class NaviElideApolloService extends ApolloService {
     const httpLink = super.link();
     const headersLink = setContext((_, context) => {
       context.headers = Object.assign(context.headers || {}, {
-        'Content-Type': 'application/json',
         clientId: 'UI'
       });
 

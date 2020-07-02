@@ -50,16 +50,7 @@ export default class ElideFacts extends EmberObject {
     // TODO: Create filter based on request intervals, filters, and havings
 
     return JSON.stringify({
-      query: `
-        ${table} {
-          edges {
-            node {
-              ${metricIds.join(' ')} ${dimensionIds.join(' ')}
-            }
-          }
-        }
-      `,
-      variables: null
+      query: `{ ${table} { edges { node { ${metricIds.join(' ')} ${dimensionIds.join(' ')} } } } }`
     });
   }
 
@@ -68,17 +59,16 @@ export default class ElideFacts extends EmberObject {
    * @param options
    * @returns Promise that resolves to the result of the AsyncQuery creation mutation
    */
-  createAsyncQueryRequest(request: RequestV1, options: RequestOptions = {}): Promise<AsyncQueryResponse> {
+  createAsyncQueryRequest(request: RequestV1, _options: RequestOptions = {}): Promise<AsyncQueryResponse> {
     const mutation: DocumentNode = GQLQueries['asyncFactsMutation'];
-    const dataQuery = this.dataQueryFromRequest(request);
-    const clientId: string = options.clientId || v1();
+    const query = this.dataQueryFromRequest(request);
 
     // TODO: Add other options based on RequestOptions
     const queryOptions: ApolloMutationOptions = {
       mutation,
       variables: {
-        ids: [clientId],
-        query: dataQuery
+        id: v1(),
+        query
       }
     };
 
@@ -94,7 +84,7 @@ export default class ElideFacts extends EmberObject {
     return this.apollo.mutate({
       mutation,
       variables: {
-        ids: [id]
+        id
       }
     });
   }
@@ -108,7 +98,7 @@ export default class ElideFacts extends EmberObject {
     return this.apollo.query({
       query,
       variables: {
-        ids: [id]
+        id
       }
     });
   }
@@ -118,7 +108,7 @@ export default class ElideFacts extends EmberObject {
    * @param _options
    */
   urlForFindQuery(_request: RequestV1, _options: RequestOptions): string {
-    throw new Error('Method not implemented.');
+    return 'TODO';
   }
 
   /**
