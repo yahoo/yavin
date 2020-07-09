@@ -62,32 +62,26 @@ module('Unit | Adapter | elide facts', function(hooks) {
 
         assert.deepEqual(
           Object.keys(requestObj.variables),
-          ['ids', 'query'],
-          'AsyncQuery mutation is sent with ids and a query string'
+          ['id', 'query'],
+          'AsyncQuery mutation is sent with id and a query string'
         );
 
-        assert.ok(uuidRegex.exec(requestObj.variables.ids[0]), 'A uuid is generated for the request id');
+        assert.ok(uuidRegex.exec(requestObj.variables.id), 'A uuid is generated for the request id');
+
         const expectedTable = TestRequest.logicalTable.table;
         const expectedColumns = [
           ...TestRequest.metrics.map(m => m.metric),
           ...TestRequest.dimensions.map(d => d.dimension)
         ].join(' ');
+
         assert.equal(
           requestObj.variables.query.replace(/[ \t\r\n]+/g, ' '),
           JSON.stringify({
-            query: `
-              ${expectedTable} {
-                edges {
-                  node {
-                    ${expectedColumns}
-                  }
-                }
-              }
-            `,
-            variables: null
+            query: `{ ${expectedTable} { edges { node { ${expectedColumns} } } } }`
           }).replace(/[ \t\r\n]+/g, ' '),
           'The data query is constructed correctly from the request'
         );
+
         assert.equal(
           requestObj.query.replace(/__typename/g, '').replace(/[ \t\r\n]+/g, ''),
           asyncFactsMutationStr.replace(/[ \t\r\n]+/g, ''),
@@ -99,7 +93,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
             edges: [
               {
                 node: {
-                  id: requestObj.variables.ids[0],
+                  id: requestObj.variables.id,
                   query: requestObj.variables.query,
                   queryType: 'GRAPHQL_V1_0',
                   status: 'QUEUED',
@@ -120,7 +114,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
       });
     });
 
-    const asyncQuery = await adapter.createAsyncQueryRequest(TestRequest, { clientId: v1() });
+    const asyncQuery = await adapter.createAsyncQueryRequest(TestRequest);
 
     assert.deepEqual(asyncQuery, expectedResponse, 'Data block of the response is returned by the asyncFetch');
 
@@ -169,7 +163,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
             edges: [
               {
                 node: {
-                  id: requestObj.variables.ids[0],
+                  id: requestObj.variables.id,
                   status: 'CANCELLED'
                 }
               }
@@ -208,7 +202,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
             edges: [
               {
                 node: {
-                  id: requestObj.variables.ids[0],
+                  id: requestObj.variables.id,
                   query: 'foo',
                   queryType: 'GRAPHQL_V1_0',
                   status: 'COMPLETE',
@@ -261,7 +255,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
 
         if (callCount === 1) {
           queryVariable = variables.query;
-          queryId = variables.ids[0];
+          queryId = variables.id;
 
           assert.equal(
             query.replace(/__typename/g, '').replace(/[ \t\r\n]+/g, ''),
@@ -274,7 +268,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
             asyncFactsQueryStr.replace(/[ \t\r\n]+/g, ''),
             'AsyncQuery fetch is sent in the follow-up requests'
           );
-          assert.equal(variables.ids[0], queryId, 'Same id is sent for mutation and query');
+          assert.equal(variables.id, queryId, 'Same id is sent for mutation and query');
 
           if (callCount === 5) {
             result = {
@@ -326,7 +320,7 @@ module('Unit | Adapter | elide facts', function(hooks) {
       });
     });
 
-    const result = await adapter.fetchDataForRequest.perform(TestRequest);
+    const result = await adapter.fetchDataForRequest(TestRequest);
     assert.deepEqual(result, expectedResponse, 'Result has correct format');
 
     Server.shutdown();
