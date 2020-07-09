@@ -17,7 +17,10 @@ export function initialize() {
      *TODO: set epoch date
      *dataEpoch: NAVI_APP.appSettings.dataEpoch,
      */
-    dataSources: [{ name: 'default', uri: config.appSettings.factApiHost, type: 'elide-facts' }],
+    dataSources: [
+      { name: 'default', uri: config.appSettings.factApiHost, type: 'bard-facts' },
+      { name: 'blockhead', uri: 'https://{elideHostname}', type: 'elide-facts' }
+    ],
     appPersistence: {
       type: 'webservice',
       uri: config.appSettings.persistenceApiHost,

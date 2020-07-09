@@ -6,7 +6,6 @@
 import faker from 'faker';
 import config from 'navi-app/config/environment';
 import BardLite from 'navi-data/mirage/routes/bard-lite';
-import graphQLHandler from 'navi-data/mirage/handlers/graphql';
 import BardMeta from './bard-meta-stub';
 import user from 'navi-app/mirage/routes/user';
 import report from 'navi-app/mirage/routes/report';
@@ -14,6 +13,7 @@ import dashboard from 'navi-app/mirage/routes/dashboard';
 import dashboardCollection from 'navi-app/mirage/routes/dashboard-collection';
 import reportCollection from 'navi-app/mirage/routes/report-collections';
 import dashboardWidget from 'navi-app/mirage/routes/dashboard-widget';
+import GraphQL from 'navi-data/mirage/routes/graphql';
 
 // Generic JS string hash https://stackoverflow.com/a/7616484
 function hashCode(str) {
@@ -33,8 +33,9 @@ export default function() {
   // https://github.com/kategengler/ember-cli-code-coverage#create-a-passthrough-when-intercepting-all-ajax-requests-in-tests
   this.passthrough('/write-coverage');
 
+  this.urlPrefix = `${config.navi.dataSources[1].uri}/`;
+  GraphQL.call(this);
   this.urlPrefix = `${config.navi.dataSources[0].uri}/`;
-  this.post('/graphql', graphQLHandler);
 
   // Mock bard facts + metadata
   this.urlPrefix = `${config.navi.dataSources[0].uri}/v1`;
@@ -43,7 +44,7 @@ export default function() {
     return faker.finance.amount();
   };
 
-  //BardLite.call(this, metricBuilder);
+  BardLite.call(this, metricBuilder);
   BardMeta.call(this);
 
   // Mock persistence

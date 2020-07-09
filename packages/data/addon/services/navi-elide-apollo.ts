@@ -10,7 +10,7 @@ export default class NaviElideApolloService extends ApolloService {
   /**
    * @property {String} namespace
    */
-  namespace = 'graphql/api/v1';
+  namespace = 'graphql';
 
   /**
    * @override
@@ -43,7 +43,6 @@ export default class NaviElideApolloService extends ApolloService {
     const defaultOptions = super.options;
 
     return Object.assign({}, defaultOptions, {
-      apiURL: this._buildURLPath(),
       requestCredentials: 'include'
     });
   }
@@ -59,6 +58,7 @@ export default class NaviElideApolloService extends ApolloService {
       context.headers = Object.assign(context.headers || {}, {
         clientId: 'UI'
       });
+      context.uri = this._buildURLPath(context.dataSourceName); // set request uri based on datasource
 
       return context;
     });
@@ -70,8 +70,8 @@ export default class NaviElideApolloService extends ApolloService {
    * @method _buildURLPath
    * @returns complete url including host and namespace
    */
-  _buildURLPath(): string {
-    const host = configHost();
+  _buildURLPath(dataSourceName: string): string {
+    const host = configHost({ dataSourceName });
     const { namespace } = this;
 
     return `${host}/${namespace}`;

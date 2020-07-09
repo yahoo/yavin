@@ -5,8 +5,8 @@
 import gql from 'graphql-tag';
 
 export const asyncFactsQueryStr = `
-  query($id: String) {
-    asyncQuery(op: FETCH, ids: [$id]) {
+  query($ids: [String!]) {
+    asyncQuery(op: FETCH, ids: $ids) {
       edges {
         node {
           id

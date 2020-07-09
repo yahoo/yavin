@@ -98,7 +98,7 @@ export default class ElideFacts extends EmberObject {
     return this.apollo.query({
       query,
       variables: {
-        id
+        ids: [id]
       }
     });
   }

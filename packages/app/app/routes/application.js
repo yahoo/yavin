@@ -26,7 +26,7 @@ export default class ApplicationRoute extends Route {
     await Promise.all([
       this.user.findOrRegister(),
       this.bardMetadata.loadMetadata(),
-      this.elideMetadata.loadMetadata()
+      this.elideMetadata.loadMetadata({ dataSourceName: 'blockhead' })
     ]);
   }
 }
