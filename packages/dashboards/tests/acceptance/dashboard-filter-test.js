@@ -39,7 +39,7 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     await selectChoose('.dashboard-dimension-selector', 'Property');
 
     await fillIn('.filter-values--dimension-select__trigger input', '1');
-    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
+    await selectChoose('.filter-values--dimension-select__trigger', '1');
 
     assert.ok(
       dataRequests.every(request => request.queryParams.filters == 'property|id-in["1"]'),
@@ -49,7 +49,7 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     dataRequests = [];
 
     await fillIn('.filter-values--dimension-select__trigger input', '2');
-    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
+    await selectChoose('.filter-values--dimension-select__trigger', '2');
 
     assert.ok(
       dataRequests.every(request => request.queryParams.filters == 'property|id-in["1","2"]'),
@@ -61,13 +61,9 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     await selectChoose('.dashboard-dimension-selector', 'Platform');
 
     await selectChoose('.filter-collection__row:nth-child(2) .filter-builder__operator-trigger', 'Contains');
-    await fillIn('.filter-collection__row:nth-child(2) .filter-values--dimension-select__trigger input', 'win');
+    await fillIn('.filter-collection__row:nth-child(2) .filter-builder__values input', 'win');
     dataRequests = [];
-    await triggerKeyEvent(
-      '.filter-collection__row:nth-child(2) .filter-values--dimension-select__trigger input',
-      'keydown',
-      'Enter'
-    );
+    await triggerKeyEvent('.filter-collection__row:nth-child(2) .filter-builder__values input', 'keydown', 'Enter');
 
     assert.ok(
       dataRequests.every(
@@ -124,7 +120,7 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     await selectChoose('.dashboard-dimension-selector', 'Multi System Id');
 
     await fillIn('.filter-values--dimension-select__trigger input', '1');
-    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
+    await selectChoose('.filter-values--dimension-select__trigger', '1');
 
     assert.ok(
       dataRequests.every(request => request.queryParams.filters == 'multiSystemId|key-in["k1"]'),
@@ -338,7 +334,7 @@ module('Acceptance | Dashboard Filters', function(hooks) {
 
     //Add a value to the filter
     await fillIn('.filter-values--dimension-select__trigger input', '1');
-    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
+    await selectChoose('.filter-values--dimension-select__trigger', '1');
 
     decompressed = await CompressionService.decompress(currentURL().split('=')[1]);
     assert.deepEqual(

@@ -3,7 +3,6 @@ import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import $ from 'jquery';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 
 module('Acceptances | Navi Dashboard Schedule Modal', function(hooks) {
   setupApplicationTest(hooks);
@@ -38,7 +37,7 @@ module('Acceptances | Navi Dashboard Schedule Modal', function(hooks) {
       .dom('.schedule-modal__format-trigger .ember-power-select-selected-item')
       .hasText('pdf', 'Format field is set to the default value when creating a new schedule');
 
-    await clickTrigger('.schedule-modal__format-trigger');
+    await click('.schedule-modal__format-trigger');
     assert.deepEqual(
       findAll('.ember-power-select-option').map(el => el.textContent.trim()),
       ['pdf', 'png'],
@@ -79,7 +78,7 @@ module('Acceptances | Navi Dashboard Schedule Modal', function(hooks) {
       .hasText('Day', 'Frequency field is set by the saved delivery rule');
 
     assert
-      .dom('.schedule-modal__input--recipients .navi-email-tag')
+      .dom('.schedule-modal__input--recipients .tag')
       .hasText('navi_user@navi.io', 'Recipients field is set by the saved delivery rule');
   });
 

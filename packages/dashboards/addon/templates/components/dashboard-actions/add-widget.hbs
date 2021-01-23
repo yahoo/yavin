@@ -14,7 +14,7 @@
       @searchField="title"
       @searchPlaceholder="Search for a report..."
       @onChange={{fn (mut this.selectedReport)}}
-      @classNames="report-select"
+      @triggerClass="add-widget-modal__report-trigger"
       as |report|
     >
       {{report.title}}

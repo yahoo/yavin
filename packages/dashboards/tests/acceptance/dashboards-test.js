@@ -241,9 +241,9 @@ module('Acceptance | Dashboards', function(hooks) {
       'There are 3 widgets in the dashboard'
     );
 
-    assert.dom('.add-widget button').isVisible('The `Add Widget` button is visible when user can edit the dashboard');
+    assert.dom('.add-widget').isVisible('The `Add Widget` button is visible when user can edit the dashboard');
 
-    await click('.add-widget .btn');
+    await click('.add-widget');
 
     assert
       .dom('.add-widget-modal .btn')
@@ -253,7 +253,7 @@ module('Acceptance | Dashboards', function(hooks) {
         'Create new assigns the new widget route to the primary button'
       );
 
-    await selectChoose('.report-select', 'Report 12');
+    await selectChoose('.add-widget-modal__report-trigger', 'Report 12');
     await click('.add-widget-modal .btn');
 
     assert.deepEqual(
@@ -414,7 +414,7 @@ module('Acceptance | Dashboards', function(hooks) {
     );
 
     // Create new widget
-    await click('.add-widget .btn');
+    await click('.add-widget');
     await click('.add-widget-modal .add-to-dashboard');
 
     // Fill out request
@@ -448,7 +448,7 @@ module('Acceptance | Dashboards', function(hooks) {
     );
 
     // Create another new widget
-    await click('.add-widget .btn');
+    await click('.add-widget');
     await click('.add-widget-modal .add-to-dashboard');
 
     // Fill out request
@@ -723,7 +723,7 @@ module('Acceptance | Dashboards', function(hooks) {
     assert.equal(currentURL(), '/dashboards/7/view', 'Cloning a dashboard transitions to newly made dashboard');
 
     // Create new widget
-    await click('.add-widget .btn');
+    await click('.add-widget');
     await click('.add-widget-modal .add-to-dashboard');
 
     // Fill out request
