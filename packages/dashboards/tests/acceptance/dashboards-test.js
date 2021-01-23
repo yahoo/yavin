@@ -419,7 +419,7 @@ module('Acceptance | Dashboards', function(hooks) {
 
     // Fill out request
     await clickItemFilter('dimension', 'Date Time');
-    await selectChoose('.filter-builder__select-trigger', 'In The Past');
+    await selectChoose('.filter-builder__operator-trigger', 'In The Past');
     await clickItem('dimension', 'Date Time');
     await selectChoose('.navi-column-config-item__parameter-trigger', 'Day');
     await clickItem('metric', 'Total Clicks');
@@ -453,7 +453,7 @@ module('Acceptance | Dashboards', function(hooks) {
 
     // Fill out request
     await clickItemFilter('dimension', 'Date Time');
-    await selectChoose('.filter-builder__select-trigger', 'In The Past');
+    await selectChoose('.filter-builder__operator-trigger', 'In The Past');
     await clickItem('dimension', 'Date Time');
     await selectChoose('.navi-column-config-item__parameter-trigger', 'Day');
     await clickItem('metric', 'Total Page Views');
@@ -541,7 +541,7 @@ module('Acceptance | Dashboards', function(hooks) {
 
     // Build Request
     await clickItemFilter('dimension', 'Date Time');
-    await selectChoose('.filter-builder__select-trigger', 'In The Past');
+    await selectChoose('.filter-builder__operator-trigger', 'In The Past');
     await clickItem('dimension', 'Date Time');
     await selectChoose('.navi-column-config-item__parameter-trigger', 'Day');
     await clickItem('metric', 'Total Clicks');
@@ -728,7 +728,7 @@ module('Acceptance | Dashboards', function(hooks) {
 
     // Fill out request
     await clickItemFilter('dimension', 'Date Time');
-    await selectChoose('.filter-builder__select-trigger', 'In The Past');
+    await selectChoose('.filter-builder__operator-trigger', 'In The Past');
     await clickItem('dimension', 'Date Time');
     await selectChoose('.navi-column-config-item__parameter-trigger', 'Day');
     await clickItem('metric', 'Total Clicks');

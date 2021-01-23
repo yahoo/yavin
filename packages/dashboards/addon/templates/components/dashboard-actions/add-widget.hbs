@@ -13,10 +13,8 @@
       @selected={{this.selectedReport}}
       @searchField="title"
       @searchPlaceholder="Search for a report..."
-      @onchange={{fn (mut this.selectedReport)}}
+      @onChange={{fn (mut this.selectedReport)}}
       @classNames="report-select"
-      @tagName="div"
-      @renderInPlace={{true}}
       as |report|
     >
       {{report.title}}

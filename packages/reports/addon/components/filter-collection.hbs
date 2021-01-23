@@ -11,14 +11,17 @@
           {{on "click" (fn (optional @onUpdateCollapsed) (not @isCollapsed))}}
         />
       {{else}}
-        <div class="filter-collection__row">
-          <NaviIcon
-            @icon="times"
+        <div class="filter-collection__row flex align-items-center m-y-4">
+          <DenaliButton
             class="filter-collection__remove{{if filter.required " filter-collection__remove--disabled"}}"
+            @style="text"
+            @size="medium"
+            @icon="minus-circle"
+            @iconOnly={{true}}
             {{on "click" (fn @onRemoveFilter filter.fragment)}}
           />
           <FilterBuilder
-            class="filter-collection__builder"
+            class="filter-collection__builder row flex-1"
             @filter={{filter.fragment}}
             @request={{@request}}
             @onUpdateFilter={{fn @onUpdateFilter filter.fragment}}

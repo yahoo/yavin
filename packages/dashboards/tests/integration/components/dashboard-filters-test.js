@@ -191,7 +191,7 @@ module('Integration | Component | dashboard filters', function(hooks) {
 
     assert.dom('.dashboard-filters--expanded-add-row').isNotVisible('add row vanishes again');
 
-    assert.dom('.filter-builder-dimension__subject').hasText('Product Family (id)');
+    assert.dom('.filter-builder__subject').hasText('Product Family (id)');
   });
 
   test('updating a filter', async function(assert) {
@@ -210,7 +210,7 @@ module('Integration | Component | dashboard filters', function(hooks) {
     });
 
     await click('.dashboard-filters__expand-button');
-    await clickTrigger(`#${$('.filter-builder-dimension__operator:eq(0)').attr('id')}`);
+    await clickTrigger(`#${$('.filter-builder__operator-trigger:eq(0)').attr('id')}`);
     await nativeMouseUp($('.ember-power-select-option:contains(Is Empty)')[0]);
   });
 

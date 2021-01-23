@@ -4,6 +4,12 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
+    'ember-power-select': {
+      theme: false
+    },
+    'ember-basic-dropdown': {
+      theme: true
+    },
     'ember-font-awesome': {
       useLess: true
     },

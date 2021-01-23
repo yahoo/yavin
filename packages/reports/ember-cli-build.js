@@ -10,6 +10,9 @@ module.exports = function(defaults) {
     'ember-power-select': {
       theme: false
     },
+    'ember-basic-dropdown': {
+      //theme: false
+    },
     sassOptions: {
       //standard ember-cli-sass options go here
       excludeFiles: [] // `app/styles` files not to be process as sass files

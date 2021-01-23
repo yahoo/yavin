@@ -38,8 +38,8 @@ module('Acceptance | Dashboard Filters', function(hooks) {
 
     await selectChoose('.dashboard-dimension-selector', 'Property');
 
-    await fillIn('.filter-builder-dimension__values input', '1');
-    await selectChoose('.filter-builder-dimension__values', '.item-row', 0);
+    await fillIn('.filter-values--dimension-select__trigger input', '1');
+    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
 
     assert.ok(
       dataRequests.every(request => request.queryParams.filters == 'property|id-in["1"]'),
@@ -48,8 +48,8 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     assert.equal(dataRequests.length, 3, 'three data requests were made (one for each widget)');
     dataRequests = [];
 
-    await fillIn('.filter-builder-dimension__values input', '2');
-    await selectChoose('.filter-builder-dimension__values', '.item-row', 0);
+    await fillIn('.filter-values--dimension-select__trigger input', '2');
+    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
 
     assert.ok(
       dataRequests.every(request => request.queryParams.filters == 'property|id-in["1","2"]'),
@@ -60,11 +60,11 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     await click('.dashboard-filters--expanded__add-filter-button');
     await selectChoose('.dashboard-dimension-selector', 'Platform');
 
-    await selectChoose('.filter-collection__row:nth-child(2) .filter-builder-dimension__operator', 'Contains');
-    await fillIn('.filter-collection__row:nth-child(2) .filter-builder-dimension__values input', 'win');
+    await selectChoose('.filter-collection__row:nth-child(2) .filter-builder__operator-trigger', 'Contains');
+    await fillIn('.filter-collection__row:nth-child(2) .filter-values--dimension-select__trigger input', 'win');
     dataRequests = [];
     await triggerKeyEvent(
-      '.filter-collection__row:nth-child(2) .filter-builder-dimension__values input',
+      '.filter-collection__row:nth-child(2) .filter-values--dimension-select__trigger input',
       'keydown',
       'Enter'
     );
@@ -123,8 +123,8 @@ module('Acceptance | Dashboard Filters', function(hooks) {
 
     await selectChoose('.dashboard-dimension-selector', 'Multi System Id');
 
-    await fillIn('.filter-builder-dimension__values input', '1');
-    await selectChoose('.filter-builder-dimension__values', '.item-row', 0);
+    await fillIn('.filter-values--dimension-select__trigger input', '1');
+    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
 
     assert.ok(
       dataRequests.every(request => request.queryParams.filters == 'multiSystemId|key-in["k1"]'),
@@ -177,7 +177,7 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     await click('.filter-collection__remove');
     await click('.filter-collection__remove');
     await click(findAll('.filter-collection__remove')[1]);
-    await selectChoose('.filter-builder-dimension__operator', 'Equals');
+    await selectChoose('.filter-builder__operator-trigger', 'Equals');
     await click('.dashboard-filters__expand-button');
 
     //Ensure that filters are changed
@@ -337,8 +337,8 @@ module('Acceptance | Dashboard Filters', function(hooks) {
     assert.equal(dataRequests.length, 3, 'No new requests run on filter add (model hook should use cached data)');
 
     //Add a value to the filter
-    await fillIn('.filter-builder-dimension__values input', '1');
-    await selectChoose('.filter-builder-dimension__values', '.item-row', 0);
+    await fillIn('.filter-values--dimension-select__trigger input', '1');
+    await selectChoose('.filter-values--dimension-select__trigger', '.item-row', 0);
 
     decompressed = await CompressionService.decompress(currentURL().split('=')[1]);
     assert.deepEqual(

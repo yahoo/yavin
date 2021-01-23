@@ -10,10 +10,9 @@
           @options={{@request.metricColumns}}
           @selected={{this.selectedMetric}}
           @searchEnabled={{false}}
-          @onchange={{this.onUpdateChartMetric}}
+          @onChange={{this.onUpdateChartMetric}}
           @dropdownClass="metric-select__select__dropdown"
           @triggerClass="metric-select__select__trigger"
-          @renderInPlace={{true}}
           as |metric|
         >
           {{metric.displayName}}
