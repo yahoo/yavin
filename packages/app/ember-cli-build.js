@@ -7,9 +7,6 @@ module.exports = function(defaults) {
     'ember-power-select': {
       theme: false
     },
-    'ember-basic-dropdown': {
-      theme: true
-    },
     'ember-font-awesome': {
       useLess: true
     },

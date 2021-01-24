@@ -34,8 +34,7 @@
         {{!-- Dimension dropdown for subtotal --}}
         {{#if this.showSubtotalDropdown}}
           <PowerSelect
-            @triggerComponent="subtotal-dimension-select-trigger"
-            @dropdownClass="subtotal-dimension-select__options"
+            @triggerClass="table-config__subtotal-dimension-trigger"
             @onChange={{this.updateSubtotal}}
             @options={{@request.dimensionColumns}}
             @searchEnabled={{false}}
