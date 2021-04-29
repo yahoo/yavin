@@ -5,11 +5,12 @@ import { setupTest } from 'ember-qunit';
 import { TestContext } from 'ember-test-helpers';
 //@ts-ignore
 import { setupMirage } from 'ember-cli-mirage/test-support';
-import PieChart, { PieChartOptions } from 'navi-core/components/navi-visualizations/pie-chart';
 import { createGlimmerComponent } from 'navi-core/test-support';
+import C3PieChart from 'navi-core/components/navi-visualizations/c3/pie-chart';
 import NaviFactResponse from 'navi-data/models/navi-fact-response';
-import RequestFragment from 'navi-core/models/bard-request-v2/request';
-import { C3Row } from 'navi-core/chart-builders/base';
+import type RequestFragment from 'navi-core/models/bard-request-v2/request';
+import type { C3Row } from 'navi-core/chart-builders/base';
+import type { PieChartOptions } from 'navi-core/components/navi-visualizations/pie-chart';
 
 let Request: RequestFragment;
 
@@ -165,19 +166,19 @@ module('Unit | Component | pie chart', function (hooks) {
   test('pieConfig', function (assert) {
     assert.expect(1);
 
-    let component = createGlimmerComponent('component:navi-visualizations/pie-chart', {
+    let component = createGlimmerComponent('component:navi-visualizations/c3/pie-chart', {
       model: A([{ Request, response: RESPONSE }]),
-    }) as PieChart;
+    }) as C3PieChart;
 
     assert.notEqual(component.pieConfig.pie.label.format, undefined, 'Pie chart has label function defined');
   });
 
   test('dataConfig', function (assert) {
     const model = A([{ request: Request, response: RESPONSE }]);
-    const component = createGlimmerComponent('component:navi-visualizations/pie-chart', {
+    const component = createGlimmerComponent('component:navi-visualizations/c3/pie-chart', {
       model,
       options: DIMENSION_SERIES_OPTIONS,
-    }) as PieChart;
+    }) as C3PieChart;
 
     assert.equal(component.dataConfig.data.type, 'pie', 'Data config contains the type property as `pie`');
 
@@ -305,10 +306,10 @@ module('Unit | Component | pie chart', function (hooks) {
     assert.expect(1);
 
     const model = A([{ request: Request, response: RESPONSE }]);
-    const component = createGlimmerComponent('component:navi-visualizations/pie-chart', {
+    const component = createGlimmerComponent('component:navi-visualizations/c3/pie-chart', {
       model,
       options: DIMENSION_SERIES_OPTIONS,
-    }) as PieChart;
+    }) as C3PieChart;
     component.dataConfig;
     const x = '2015-12-14 00:00:00.000';
     const requiredToolTipData = {
