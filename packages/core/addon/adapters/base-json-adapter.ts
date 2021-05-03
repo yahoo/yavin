@@ -55,11 +55,10 @@ export default abstract class BaseJsonAdapter extends DS.JSONAPIAdapter {
     // Match our API's format for filters since it differs from Ember Data default
     const { modelName } = (type as unknown) as typeof DS.Model;
     const url = this.buildURL(`${modelName}`, ids, snapshots, 'findMany');
-    const filterRoot = pluralize(`${modelName}`);
-    const filterId = `${filterRoot}.id`;
+    const filter = `id=in=(${ids.join(',')})`;
 
     return this.ajax(url, 'GET', {
-      data: { filter: { [filterId]: ids.join(',') } },
+      data: { filter },
     });
   }
 

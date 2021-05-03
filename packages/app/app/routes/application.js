@@ -16,6 +16,10 @@ export default class ApplicationRoute extends Route {
    * @returns {Ember.RSVP.Promise}
    */
   async model() {
-    await Promise.all([this.user.findOrRegister(), this.naviMetadata.loadMetadata()]);
+    await Promise.all([
+      this.user.findOrRegister(),
+      this.naviMetadata.loadMetadata(),
+      this.naviMetadata.loadMetadata({ dataSourceName: 'prometheus' }),
+    ]);
   }
 }
